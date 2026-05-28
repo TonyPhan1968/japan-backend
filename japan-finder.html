@@ -282,7 +282,7 @@ function showMapInfo(place, index){
   const openTag = place.opening_hours?.open_now != null
     ? `<span class="tag ${place.opening_hours.open_now?'open':'closed'}">${place.opening_hours.open_now?'Open now':'Closed'}</span>` : '';
   const mapsUrl = place.place_id
-    ? `https://www.google.com/maps/place/?q=place_id:${place.place_id}` : '#';
+    ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place.name+' '+place.formatted_address)}` : '#';
 
   panel.innerHTML = `
     <div class="map-info-name">${index+1}. ${place.name}</div>
@@ -319,7 +319,7 @@ function renderList(places){
     const rating=p.rating?`<span class="stars">${stars(p.rating)} <span>${p.rating} (${(p.user_ratings_total||0).toLocaleString()})</span></span>`:'';
     const typeTag=fmtTypes(p.types)?`<span class="tag">${fmtTypes(p.types)}</span>`:'';
     const openTag=p.opening_hours?.open_now!=null?`<span class="tag ${p.opening_hours.open_now?'open':'closed'}">${p.opening_hours.open_now?'Open now':'Closed'}</span>`:'';
-    const mapUrl=p.place_id?`https://www.google.com/maps/place/?q=place_id:${p.place_id}`:'#';
+    const mapUrl=p.place_id?`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(p.name+' '+p.formatted_address)}`:'#';
     card.innerHTML=`
       <div class="card-icon"><i class="ti ${getIcon(p.types)}"></i></div>
       <div class="card-body">
