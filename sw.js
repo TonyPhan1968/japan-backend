@@ -1,4 +1,4 @@
-const CACHE = 'japan-2026-v1';
+const CACHE = 'japan-2026-v3';
 const ASSETS = [
   '/japan-finder.html',
   '/manifest.json',
