@@ -4,15 +4,12 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Japan 2026 Trip Finder</title>
-
-<!-- PWA -->
 <link rel="manifest" href="manifest.json"/>
 <meta name="theme-color" content="#c0392b"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="Japan 2026"/>
 <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
-
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Shippori+Mincho:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -27,36 +24,29 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 .hero-title em{font-style:normal;font-weight:700;color:var(--crimson)}
 .year-badge{display:inline-block;font-size:11px;letter-spacing:0.2em;color:var(--muted);background:var(--paper);border:0.5px solid var(--border);border-radius:20px;padding:3px 14px;margin-bottom:1.75rem}
 .search-wrap{position:relative;max-width:580px;margin:0 auto 1.25rem}
-.search-input{width:100%;padding:14px 52px 14px 18px;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink);background:var(--card);border:1.5px solid var(--border);border-radius:14px;outline:none;-webkit-appearance:none;transition:border-color 0.2s,box-shadow 0.2s}
+.search-input{width:100%;padding:14px 52px 14px 18px;font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink);background:var(--card);border:1.5px solid var(--border);border-radius:14px;outline:none;-webkit-appearance:none;transition:border-color 0.2s}
 .search-input::placeholder{color:#b0a89b}
 .search-input:focus{border-color:var(--crimson);box-shadow:0 0 0 3px rgba(192,57,43,0.08)}
 .search-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:34px;height:34px;background:var(--crimson);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.search-btn:active{opacity:0.8}
 .pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:620px;margin:0 auto}
 .pill{display:flex;align-items:center;gap:6px;padding:9px 15px;background:var(--card);border:1px solid var(--border);border-radius:100px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all 0.2s;white-space:nowrap;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
 .pill:active,.pill.active{background:var(--crimson);border-color:var(--crimson);color:#fff}
 .pill i{font-size:14px}
 .divider{width:40px;height:1px;background:var(--border);margin:1.75rem auto 0}
-
-/* Results section */
 .results-section{padding:0 1.25rem 4rem;max-width:740px;margin:0 auto}
 .results-header{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 0 1rem}
 .results-label{font-family:'Shippori Mincho',serif;font-size:13px;letter-spacing:0.15em;color:var(--muted);max-width:55%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .results-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .result-count{font-size:12px;color:var(--muted);background:var(--paper);border:0.5px solid var(--border);padding:3px 10px;border-radius:20px}
-
-/* View toggle */
 .view-toggle{display:flex;background:var(--paper);border:0.5px solid var(--border);border-radius:20px;padding:3px;gap:2px}
 .view-btn{display:flex;align-items:center;gap:5px;padding:5px 12px;border:none;background:transparent;border-radius:16px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;-webkit-tap-highlight-color:transparent}
 .view-btn.active{background:var(--crimson);color:#fff}
 .view-btn i{font-size:13px}
-
-/* List view */
 .spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--crimson);border-radius:50%;animation:spin 0.8s linear infinite;margin:3rem auto 1rem}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{text-align:center;font-family:'Shippori Mincho',serif;font-size:13px;letter-spacing:0.15em;color:var(--muted);margin-bottom:3rem}
-.result-card{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin-bottom:10px;display:flex;gap:0.85rem;animation:cardIn 0.3s ease both;-webkit-tap-highlight-color:transparent;cursor:pointer}
-.result-card:active,.result-card.highlighted{border-color:var(--crimson)}
+.result-card{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin-bottom:10px;display:flex;gap:0.85rem;animation:cardIn 0.3s ease both;-webkit-tap-highlight-color:transparent;cursor:pointer;transition:border-color 0.2s}
+.result-card:active{border-color:var(--crimson)}
 @keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .card-icon{width:42px;height:42px;background:var(--paper);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .card-icon i{font-size:20px;color:var(--crimson)}
@@ -69,9 +59,9 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 .tag{font-size:10px;background:var(--paper);border:0.5px solid var(--border);color:var(--muted);padding:2px 8px;border-radius:20px}
 .tag.open{background:#edf7ed;border-color:#b7dfb7;color:#2e7d32}
 .tag.closed{background:#fdecea;border-color:#f5b8b4;color:#c0392b}
-.map-link{margin-left:auto;font-size:11px;color:var(--crimson);text-decoration:none;display:flex;align-items:center;gap:3px;flex-shrink:0;align-self:flex-start;padding-top:2px}
+.card-arrow{margin-left:auto;color:var(--border);font-size:16px;flex-shrink:0;align-self:center}
 
-/* Map view */
+/* Map */
 #mapContainer{display:none;border-radius:14px;overflow:hidden;border:0.5px solid var(--border);margin-bottom:1rem}
 #map{width:100%;height:420px}
 .map-info-panel{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin-bottom:10px;display:none}
@@ -83,15 +73,41 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 .map-action-btn{display:flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;font-size:12px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;border:0.5px solid var(--border);background:var(--paper);color:var(--ink)}
 .map-action-btn.primary{background:var(--crimson);border-color:var(--crimson);color:#fff}
 
+/* Detail panel (bottom sheet) */
+.detail-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;animation:fadeIn 0.2s ease}
+.detail-overlay.visible{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.detail-sheet{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-radius:20px 20px 0 0;max-height:88vh;overflow-y:auto;z-index:101;animation:slideUp 0.3s ease;padding-bottom:env(safe-area-inset-bottom)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.detail-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0}
+.detail-photos{position:relative;height:220px;overflow:hidden;background:var(--paper)}
+.detail-photos img{width:100%;height:100%;object-fit:cover}
+.detail-photos-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--border);font-size:48px}
+.detail-body{padding:1.25rem}
+.detail-name{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:400;margin-bottom:4px}
+.detail-address{font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.detail-meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.detail-actions{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.detail-btn{display:flex;align-items:center;gap:6px;padding:10px 16px;border-radius:100px;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;text-decoration:none;border:1px solid var(--border);background:var(--paper);color:var(--ink);-webkit-tap-highlight-color:transparent}
+.detail-btn.primary{background:var(--crimson);border-color:var(--crimson);color:#fff}
+.detail-btn i{font-size:15px}
+.detail-section{margin-bottom:16px}
+.detail-section-title{font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);font-family:'Shippori Mincho',serif;margin-bottom:8px}
+.hours-row{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;border-bottom:0.5px solid var(--paper)}
+.hours-row:last-child{border-bottom:none}
+.hours-day{color:var(--muted);font-weight:500;min-width:90px}
+.hours-time{color:var(--ink);text-align:right}
+.hours-row.today .hours-day,.hours-row.today .hours-time{color:var(--crimson);font-weight:600}
+.detail-loading{text-align:center;padding:3rem;color:var(--muted)}
+.detail-loading .spinner{margin:0 auto 0.75rem}
+.close-btn{position:absolute;top:12px;right:12px;width:32px;height:32px;background:rgba(0,0,0,0.35);border:none;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2}
+.close-btn i{color:#fff;font-size:16px}
+.price-dots{color:var(--gold);font-size:13px}
+
 .error-box{background:#fdecea;border:0.5px solid #f5b8b4;border-radius:10px;padding:1rem 1.25rem;font-size:13px;color:#922b21;line-height:1.8}
-.offline-banner{display:none;background:#fff3cd;border-bottom:1px solid #ffc107;padding:8px 16px;text-align:center;font-size:12px;color:#856404}
 </style>
 </head>
 <body>
-
-<div class="offline-banner" id="offlineBanner">
-  <i class="ti ti-wifi-off"></i> You're offline — showing cached results only
-</div>
 
 <div class="hero">
   <div class="kamon">
@@ -114,9 +130,7 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
   <div class="year-badge">Your 2026 guide</div>
   <div class="search-wrap">
     <input class="search-input" id="searchInput" type="text" placeholder="e.g. ramen in Shibuya, jazz bars in Osaka…" autocomplete="off"/>
-    <button class="search-btn" id="searchBtn" aria-label="Search">
-      <i class="ti ti-search" style="color:#fff;font-size:15px"></i>
-    </button>
+    <button class="search-btn" id="searchBtn"><i class="ti ti-search" style="color:#fff;font-size:15px"></i></button>
   </div>
   <div class="pills">
     <button class="pill" data-query="best restaurants in Tokyo Japan"><i class="ti ti-tools-kitchen-2"></i> Restaurants</button>
@@ -134,47 +148,35 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
     <div class="results-right">
       <span class="result-count" id="resultCount"></span>
       <div class="view-toggle">
-        <button class="view-btn active" id="listViewBtn" onclick="switchView('list')">
-          <i class="ti ti-list"></i> List
-        </button>
-        <button class="view-btn" id="mapViewBtn" onclick="switchView('map')">
-          <i class="ti ti-map"></i> Map
-        </button>
+        <button class="view-btn active" id="listViewBtn" onclick="switchView('list')"><i class="ti ti-list"></i> List</button>
+        <button class="view-btn" id="mapViewBtn" onclick="switchView('map')"><i class="ti ti-map"></i> Map</button>
       </div>
     </div>
   </div>
-
-  <!-- List view -->
-  <div id="listView">
-    <div id="resultsContainer"></div>
-  </div>
-
-  <!-- Map view -->
+  <div id="listView"><div id="resultsContainer"></div></div>
   <div id="mapView" style="display:none">
     <div id="mapContainer"><div id="map"></div></div>
     <div class="map-info-panel" id="mapInfoPanel"></div>
   </div>
 </div>
 
+<!-- Detail bottom sheet -->
+<div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"></div>
+<div class="detail-sheet" id="detailSheet" style="display:none">
+  <div class="detail-handle"></div>
+  <div id="detailContent"></div>
+</div>
+
 <script>
-const BACKEND_URL = 'https://japan-backend-ry5q.onrender.com/search';
-const MAPS_KEY = 'AIzaSyBeTfb3Wdt53Id2fGf2Aas1UUqgyj0zZ5A';
+if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(regs=>{regs.forEach(r=>r.unregister());});}
+
+const BACKEND_URL = 'https://japan-backend-ry5q.onrender.com';
+const MAPS_KEY    = 'AIzaSyBeTfb3Wdt53Id2fGf2Aas1UUqgyj0zZ5A';
 
 let currentPlaces = [];
-let map = null;
-let markers = [];
-let mapLoaded = false;
-let currentView = 'list';
+let map = null, markers = [], mapLoaded = false, currentView = 'list';
 
-// Offline detection
-window.addEventListener('online',  () => document.getElementById('offlineBanner').style.display='none');
-window.addEventListener('offline', () => document.getElementById('offlineBanner').style.display='block');
-if (!navigator.onLine) document.getElementById('offlineBanner').style.display='block';
 
-// Service worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
 
 const ICONS = {
   restaurant:'ti-tools-kitchen-2',food:'ti-tools-kitchen-2',ramen:'ti-bowl',
@@ -184,142 +186,169 @@ const ICONS = {
   temple:'ti-building',shrine:'ti-building',museum:'ti-building-castle',
   park:'ti-trees',default:'ti-map-pin'
 };
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const PRICE = ['','¥','¥¥','¥¥¥','¥¥¥¥'];
 
 function getIcon(types){
   if(!types||!types.length) return ICONS.default;
   for(const t of types){const k=t.toLowerCase();for(const key in ICONS){if(k.includes(key))return ICONS[key];}}
   return ICONS.default;
 }
-function stars(r){if(!r)return '';let s='';for(let i=0;i<Math.floor(r);i++)s+='★';if(r-Math.floor(r)>=0.5)s+='½';return s;}
+function starsHtml(r){if(!r)return '';let s='';for(let i=0;i<Math.floor(r);i++)s+='★';if(r-Math.floor(r)>=0.5)s+='½';return s;}
 function fmtTypes(t){if(!t||!t.length)return '';return t.slice(0,2).map(x=>x.replace(/_/g,' ')).join(' · ');}
 
-// View toggle
+// ── Detail panel ──────────────────────────────────────────────────────────────
+async function openDetail(place){
+  const sheet = document.getElementById('detailSheet');
+  const overlay = document.getElementById('detailOverlay');
+  const content = document.getElementById('detailContent');
+
+  sheet.style.display = 'block';
+  overlay.classList.add('visible');
+  content.innerHTML = `<div class="detail-loading"><div class="spinner"></div><div style="font-family:Shippori Mincho,serif;font-size:13px;letter-spacing:0.1em;color:#7a6e61">Loading details…</div></div>`;
+
+  try {
+    const resp = await fetch(`${BACKEND_URL}/details?place_id=${place.place_id}`);
+    if(!resp.ok) throw new Error('Failed to load details');
+    const d = await resp.json();
+
+    const todayIdx = new Date().getDay();
+    const photoHtml = d.photos?.length
+      ? `<img src="${d.photos[0].url}" alt="${d.name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=detail-photos-placeholder><i class=ti ti-photo-off></i></div>'">`
+      : `<div class="detail-photos-placeholder"><i class="ti ti-photo-off"></i></div>`;
+
+    const ratingHtml = d.rating
+      ? `<span class="stars">${starsHtml(d.rating)} <span>${d.rating} (${(d.user_ratings_total||0).toLocaleString()})</span></span>` : '';
+    const typeHtml = fmtTypes(d.types) ? `<span class="tag">${fmtTypes(d.types)}</span>` : '';
+    const openHtml = d.opening_hours?.open_now != null
+      ? `<span class="tag ${d.opening_hours.open_now?'open':'closed'}">${d.opening_hours.open_now?'Open now':'Closed'}</span>` : '';
+    const priceHtml = d.price_level ? `<span class="price-dots">${PRICE[d.price_level]}</span>` : '';
+
+    const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(d.name+' '+d.formatted_address)}`;
+    const websiteBtn = d.website
+      ? `<a class="detail-btn" href="${d.website}" target="_blank"><i class="ti ti-world"></i> Website</a>` : '';
+    const phoneBtn = d.phone
+      ? `<a class="detail-btn" href="tel:${d.phone}"><i class="ti ti-phone"></i> ${d.phone}</a>` : '';
+
+    let hoursHtml = '';
+    if(d.opening_hours?.weekday_text?.length){
+      hoursHtml = `<div class="detail-section">
+        <div class="detail-section-title">Opening Hours</div>
+        ${d.opening_hours.weekday_text.map((line, i) => {
+          const dayName = line.split(':')[0];
+          const time = line.substring(dayName.length+1).trim();
+          // weekday_text starts Monday=0, but getDay() Sunday=0
+          const isToday = ((i+1) % 7) === todayIdx;
+          return `<div class="hours-row ${isToday?'today':''}">
+            <span class="hours-day">${dayName}</span>
+            <span class="hours-time">${time}</span>
+          </div>`;
+        }).join('')}
+      </div>`;
+    }
+
+    content.innerHTML = `
+      <div style="position:relative">
+        <div class="detail-photos">${photoHtml}</div>
+        <button class="close-btn" onclick="closeDetail()"><i class="ti ti-x"></i></button>
+      </div>
+      <div class="detail-body">
+        <div class="detail-name">${d.name}</div>
+        <div class="detail-address">${d.formatted_address}</div>
+        <div class="detail-meta">${ratingHtml}${typeHtml}${openHtml}${priceHtml}</div>
+        <div class="detail-actions">
+          <a class="detail-btn primary" href="${directionsUrl}" target="_blank"><i class="ti ti-directions"></i> Directions</a>
+          ${websiteBtn}${phoneBtn}
+        </div>
+        ${hoursHtml}
+      </div>`;
+  } catch(err) {
+    content.innerHTML = `<div style="padding:1.5rem"><div class="error-box">Could not load details. Please try again.<br><small>${err.message}</small></div></div>`;
+  }
+}
+
+function closeDetail(){
+  document.getElementById('detailSheet').style.display='none';
+  document.getElementById('detailOverlay').classList.remove('visible');
+}
+
+// ── View toggle ───────────────────────────────────────────────────────────────
 function switchView(view){
   currentView = view;
   document.getElementById('listViewBtn').classList.toggle('active', view==='list');
   document.getElementById('mapViewBtn').classList.toggle('active', view==='map');
-  document.getElementById('listView').style.display = view==='list' ? 'block' : 'none';
-  document.getElementById('mapView').style.display  = view==='map'  ? 'block' : 'none';
-
-  if(view==='map'){
-    document.getElementById('mapContainer').style.display='block';
-    if(!mapLoaded) loadGoogleMaps();
-    else renderMap();
-  }
+  document.getElementById('listView').style.display  = view==='list' ? 'block' : 'none';
+  document.getElementById('mapView').style.display   = view==='map'  ? 'block' : 'none';
+  if(view==='map'){ document.getElementById('mapContainer').style.display='block'; if(!mapLoaded) loadGoogleMaps(); else renderMap(); }
 }
 
-// Load Google Maps JS API dynamically
 function loadGoogleMaps(){
   if(mapLoaded) return;
-  const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${MAPS_KEY}&callback=initMap`;
-  script.async = true;
-  document.head.appendChild(script);
+  const s=document.createElement('script');
+  s.src=`https://maps.googleapis.com/maps/api/js?key=${MAPS_KEY}&callback=initMap`;
+  s.async=true; document.head.appendChild(s);
 }
 
 window.initMap = function(){
-  mapLoaded = true;
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 35.6762, lng: 139.6503},
-    zoom: 11,
-    mapTypeControl: false,
-    streetViewControl: false,
-    fullscreenControl: false,
-    styles: [
-      {featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},
-      {featureType:'transit',elementType:'labels.icon',stylers:[{visibility:'off'}]}
-    ]
+  mapLoaded=true;
+  map=new google.maps.Map(document.getElementById('map'),{
+    center:{lat:35.6762,lng:139.6503},zoom:11,
+    mapTypeControl:false,streetViewControl:false,fullscreenControl:false,
+    styles:[{featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]}]
   });
   renderMap();
 };
 
 function renderMap(){
-  if(!map || !currentPlaces.length) return;
-
-  // Clear existing markers
-  markers.forEach(m => m.setMap(null));
-  markers = [];
-
-  const bounds = new google.maps.LatLngBounds();
-
-  currentPlaces.forEach((place, i) => {
-    const lat = place.geometry?.location?.lat;
-    const lng = place.geometry?.location?.lng;
-    if(!lat || !lng) return;
-
-    const marker = new google.maps.Marker({
-      position: {lat, lng},
-      map,
-      title: place.name,
-      label: {
-        text: String(i+1),
-        color: '#ffffff',
-        fontSize: '12px',
-        fontWeight: '500'
-      },
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        fillColor: '#c0392b',
-        fillOpacity: 1,
-        strokeColor: '#ffffff',
-        strokeWeight: 2,
-        scale: 16
-      }
+  if(!map||!currentPlaces.length) return;
+  markers.forEach(m=>m.setMap(null)); markers=[];
+  const bounds=new google.maps.LatLngBounds();
+  currentPlaces.forEach((place,i)=>{
+    const lat=place.geometry?.location?.lat, lng=place.geometry?.location?.lng;
+    if(!lat||!lng) return;
+    const marker=new google.maps.Marker({
+      position:{lat,lng},map,title:place.name,
+      label:{text:String(i+1),color:'#ffffff',fontSize:'12px',fontWeight:'500'},
+      icon:{path:google.maps.SymbolPath.CIRCLE,fillColor:'#c0392b',fillOpacity:1,strokeColor:'#ffffff',strokeWeight:2,scale:16}
     });
-
-    marker.addListener('click', () => showMapInfo(place, i));
-    markers.push(marker);
-    bounds.extend({lat, lng});
+    marker.addListener('click',()=>showMapInfo(place,i));
+    markers.push(marker); bounds.extend({lat,lng});
   });
-
-  if(markers.length > 0) map.fitBounds(bounds);
+  if(markers.length>0) map.fitBounds(bounds);
 }
 
-function showMapInfo(place, index){
-  const panel = document.getElementById('mapInfoPanel');
-  const rating = place.rating ? `<span class="stars">${stars(place.rating)} <span>${place.rating}</span></span>` : '';
-  const typeTag = fmtTypes(place.types) ? `<span class="tag">${fmtTypes(place.types)}</span>` : '';
-  const openTag = place.opening_hours?.open_now != null
-    ? `<span class="tag ${place.opening_hours.open_now?'open':'closed'}">${place.opening_hours.open_now?'Open now':'Closed'}</span>` : '';
-  const mapsUrl = place.place_id
-    ? `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place.name+' '+place.formatted_address)}` : '#';
-
-  panel.innerHTML = `
+function showMapInfo(place,index){
+  const panel=document.getElementById('mapInfoPanel');
+  const rating=place.rating?`<span class="stars">${starsHtml(place.rating)} <span>${place.rating}</span></span>`:'';
+  const typeTag=fmtTypes(place.types)?`<span class="tag">${fmtTypes(place.types)}</span>`:'';
+  const openTag=place.opening_hours?.open_now!=null?`<span class="tag ${place.opening_hours.open_now?'open':'closed'}">${place.opening_hours.open_now?'Open now':'Closed'}</span>`:'';
+  const directionsUrl=`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(place.name+' '+place.formatted_address)}`;
+  panel.innerHTML=`
     <div class="map-info-name">${index+1}. ${place.name}</div>
     <div class="map-info-address">${place.formatted_address||''}</div>
     <div class="map-info-meta">${rating}${typeTag}${openTag}</div>
     <div class="map-info-actions">
-      <a class="map-action-btn primary" href="${mapsUrl}" target="_blank">
-        <i class="ti ti-directions"></i> Directions
-      </a>
-      <button class="map-action-btn" onclick="document.getElementById('mapInfoPanel').classList.remove('visible')">
-        <i class="ti ti-x"></i> Close
-      </button>
+      <a class="map-action-btn primary" href="${directionsUrl}" target="_blank"><i class="ti ti-directions"></i> Directions</a>
+      <button class="map-action-btn" onclick="openDetail(currentPlaces[${index}])"><i class="ti ti-info-circle"></i> Details</button>
+      <button class="map-action-btn" onclick="document.getElementById('mapInfoPanel').classList.remove('visible')"><i class="ti ti-x"></i></button>
     </div>`;
   panel.classList.add('visible');
-
-  // Pan map to marker
-  const lat = place.geometry?.location?.lat;
-  const lng = place.geometry?.location?.lng;
-  if(lat && lng) map.panTo({lat, lng});
+  const lat=place.geometry?.location?.lat, lng=place.geometry?.location?.lng;
+  if(lat&&lng) map.panTo({lat,lng});
 }
 
-// Render list cards
+// ── Render list ───────────────────────────────────────────────────────────────
 function renderList(places){
-  const container = document.getElementById('resultsContainer');
-  container.innerHTML = '';
-  if(!places.length){
-    container.innerHTML='<p style="text-align:center;color:#7a6e61;padding:2rem;font-family:Shippori Mincho,serif;letter-spacing:0.1em">No results found — try a different search</p>';
-    return;
-  }
+  const container=document.getElementById('resultsContainer');
+  container.innerHTML='';
+  if(!places.length){ container.innerHTML='<p style="text-align:center;color:#7a6e61;padding:2rem;font-family:Shippori Mincho,serif">No results found — try a different search</p>'; return; }
   places.forEach((p,i)=>{
     const card=document.createElement('div');
     card.className='result-card';
     card.style.animationDelay=`${i*45}ms`;
-    const rating=p.rating?`<span class="stars">${stars(p.rating)} <span>${p.rating} (${(p.user_ratings_total||0).toLocaleString()})</span></span>`:'';
+    const rating=p.rating?`<span class="stars">${starsHtml(p.rating)} <span>${p.rating} (${(p.user_ratings_total||0).toLocaleString()})</span></span>`:'';
     const typeTag=fmtTypes(p.types)?`<span class="tag">${fmtTypes(p.types)}</span>`:'';
     const openTag=p.opening_hours?.open_now!=null?`<span class="tag ${p.opening_hours.open_now?'open':'closed'}">${p.opening_hours.open_now?'Open now':'Closed'}</span>`:'';
-    const mapUrl=p.place_id?`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(p.name+' '+p.formatted_address)}`:'#';
     card.innerHTML=`
       <div class="card-icon"><i class="ti ${getIcon(p.types)}"></i></div>
       <div class="card-body">
@@ -327,13 +356,15 @@ function renderList(places){
         <div class="card-address">${p.formatted_address||p.vicinity||''}</div>
         <div class="card-meta">${rating}${typeTag}${openTag}</div>
       </div>
-      <a class="map-link" href="${mapUrl}" target="_blank"><i class="ti ti-map-2"></i> Map</a>`;
+      <i class="ti ti-chevron-right card-arrow"></i>`;
+    card.addEventListener('click', () => openDetail(p));
     container.appendChild(card);
   });
 }
 
+// ── Search ────────────────────────────────────────────────────────────────────
 async function doSearch(query){
-  currentPlaces = [];
+  currentPlaces=[];
   const sec=document.getElementById('resultsSection');
   const container=document.getElementById('resultsContainer');
   document.getElementById('resultsLabel').textContent=query;
@@ -342,25 +373,23 @@ async function doSearch(query){
   sec.style.display='block';
   container.innerHTML='<div class="spinner"></div><div class="loading-text">Searching Japan…</div>';
   sec.scrollIntoView({behavior:'smooth',block:'start'});
-
   try{
-    const resp=await fetch(`${BACKEND_URL}?query=${encodeURIComponent(query)}`);
+    const resp=await fetch(`${BACKEND_URL}/search?query=${encodeURIComponent(query)}`);
     if(!resp.ok) throw new Error(`Server error: ${resp.status}`);
     const data=await resp.json();
     currentPlaces=data.results||[];
-    document.getElementById('resultCount').textContent=currentPlaces.length ? `${currentPlaces.length} found` : '';
+    document.getElementById('resultCount').textContent=currentPlaces.length?`${currentPlaces.length} found`:'';
     renderList(currentPlaces);
-    if(currentView==='map' && mapLoaded) renderMap();
+    if(currentView==='map'&&mapLoaded) renderMap();
   }catch(err){
-    container.innerHTML=`<div class="error-box"><strong>Could not load results.</strong><br>The server may be waking up — please try again in 30 seconds.<br><br>Error: ${err.message}</div>`;
+    container.innerHTML=`<div class="error-box"><strong>Could not load results.</strong> The server may be waking up — please try again in 30 seconds.<br><small>${err.message}</small></div>`;
   }
 }
 
 document.querySelectorAll('.pill').forEach(pill=>{
   pill.addEventListener('click',()=>{
     document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
-    pill.classList.add('active');
-    doSearch(pill.dataset.query);
+    pill.classList.add('active'); doSearch(pill.dataset.query);
   });
 });
 document.getElementById('searchBtn').addEventListener('click',()=>{
