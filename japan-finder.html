@@ -49,15 +49,22 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 .view-btn i{font-size:13px}
 
 /* Filter bar */
-.filter-panel{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin-bottom:12px;animation:cardIn 0.25s ease}
-.filter-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px}
-.filter-row:last-child{margin-bottom:0}
-.filter-label{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);font-family:'Shippori Mincho',serif;min-width:54px;padding-top:6px;flex-shrink:0}
-.filter-opts{display:flex;gap:5px;flex-wrap:wrap}
-.fopt{padding:5px 11px;background:var(--paper);border:0.5px solid var(--border);border-radius:100px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.filter-panel{background:var(--card);border:0.5px solid var(--border);border-radius:14px;margin-bottom:12px;animation:cardIn 0.25s ease;overflow:hidden}
+.filter-row{border-bottom:0.5px solid var(--paper)}
+.filter-row:last-child{border-bottom:none}
+.filter-header{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent;user-select:none}
+.filter-header-left{display:flex;align-items:center;gap:8px}
+.filter-header-icon{font-size:15px;color:var(--crimson)}
+.filter-header-label{font-size:13px;font-weight:500;color:var(--ink)}
+.filter-header-value{font-size:12px;color:var(--crimson);font-weight:500;margin-right:4px}
+.filter-chevron{font-size:14px;color:var(--muted);transition:transform 0.2s}
+.filter-chevron.open{transform:rotate(180deg)}
+.filter-body{display:none;padding:0 14px 12px;flex-wrap:wrap;gap:6px}
+.filter-body.open{display:flex}
+.fopt{padding:6px 12px;background:var(--paper);border:0.5px solid var(--border);border-radius:100px;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;-webkit-tap-highlight-color:transparent;white-space:nowrap}
 .fopt.active{background:var(--crimson);border-color:var(--crimson);color:#fff}
 .fopt.toggle-on{background:#2d5a3d;border-color:#2d5a3d;color:#fff}
-.location-hint{font-size:11px;color:var(--muted);font-style:italic;margin-top:4px;padding-left:64px}
+.location-hint{font-size:11px;color:var(--muted);font-style:italic;padding:0 14px 10px}
 .active-filters{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
 .af-tag{display:flex;align-items:center;gap:3px;font-size:11px;background:var(--ink);color:#fff;padding:3px 9px;border-radius:20px}
 
@@ -185,59 +192,78 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 
   <!-- Filter panel (appears after search) -->
   <div class="filter-panel" id="filterPanel">
-    <div id="cuisineRow" style="display:none">
-      <div class="filter-row">
-        <span class="filter-label">🍜 Cuisine</span>
-        <div class="filter-opts" id="cuisineOpts">
-          <button class="fopt active" data-cuisine="">All</button>
-          <button class="fopt" data-cuisine="Japanese">Japanese</button>
-          <button class="fopt" data-cuisine="Vietnamese">Vietnamese</button>
-          <button class="fopt" data-cuisine="Chinese">Chinese</button>
-          <button class="fopt" data-cuisine="Korean">Korean</button>
-          <button class="fopt" data-cuisine="Italian">Italian</button>
-          <button class="fopt" data-cuisine="French">French</button>
-          <button class="fopt" data-cuisine="Western">Western</button>
-        </div>
+
+    <!-- Cuisine (restaurants only) -->
+    <div class="filter-row" id="cuisineRow" style="display:none">
+      <div class="filter-header" onclick="toggleFilter('cuisineBody','cuisineChevron')">
+        <div class="filter-header-left"><i class="ti ti-bowl filter-header-icon"></i><span class="filter-header-label">Cuisine</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><span class="filter-header-value" id="cuisineVal">All</span><i class="ti ti-chevron-down filter-chevron" id="cuisineChevron"></i></div>
+      </div>
+      <div class="filter-body" id="cuisineBody">
+        <button class="fopt active" data-cuisine="">All</button>
+        <button class="fopt" data-cuisine="Japanese">Japanese</button>
+        <button class="fopt" data-cuisine="Vietnamese">Vietnamese</button>
+        <button class="fopt" data-cuisine="Chinese">Chinese</button>
+        <button class="fopt" data-cuisine="Korean">Korean</button>
+        <button class="fopt" data-cuisine="Italian">Italian</button>
+        <button class="fopt" data-cuisine="French">French</button>
+        <button class="fopt" data-cuisine="Western">Western</button>
       </div>
     </div>
-    <div id="priceRow" style="display:none">
-      <div class="filter-row">
-        <span class="filter-label">💴 Price</span>
-        <div class="filter-opts" id="priceOpts">
-          <button class="fopt active" data-price="">Any</button>
-          <button class="fopt" data-price="1">¥</button>
-          <button class="fopt" data-price="2">¥¥</button>
-          <button class="fopt" data-price="3">¥¥¥</button>
-          <button class="fopt" data-price="4">¥¥¥¥</button>
-        </div>
+
+    <!-- Price (restaurants only) -->
+    <div class="filter-row" id="priceRow" style="display:none">
+      <div class="filter-header" onclick="toggleFilter('priceBody','priceChevron')">
+        <div class="filter-header-left"><i class="ti ti-currency-yen filter-header-icon"></i><span class="filter-header-label">Price</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><span class="filter-header-value" id="priceVal">Any</span><i class="ti ti-chevron-down filter-chevron" id="priceChevron"></i></div>
+      </div>
+      <div class="filter-body" id="priceBody">
+        <button class="fopt active" data-price="">Any</button>
+        <button class="fopt" data-price="1">¥</button>
+        <button class="fopt" data-price="2">¥¥</button>
+        <button class="fopt" data-price="3">¥¥¥</button>
+        <button class="fopt" data-price="4">¥¥¥¥</button>
       </div>
     </div>
+
+    <!-- Rating -->
     <div class="filter-row">
-      <span class="filter-label">⭐ Rating</span>
-      <div class="filter-opts" id="ratingOpts">
+      <div class="filter-header" onclick="toggleFilter('ratingBody','ratingChevron')">
+        <div class="filter-header-left"><i class="ti ti-star filter-header-icon"></i><span class="filter-header-label">Rating</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><span class="filter-header-value" id="ratingVal">Any</span><i class="ti ti-chevron-down filter-chevron" id="ratingChevron"></i></div>
+      </div>
+      <div class="filter-body" id="ratingBody">
         <button class="fopt active" data-rating="">Any</button>
         <button class="fopt" data-rating="3.5">3.5+</button>
         <button class="fopt" data-rating="4.0">4.0+</button>
         <button class="fopt" data-rating="4.5">4.5+</button>
       </div>
     </div>
+
+    <!-- Distance -->
     <div class="filter-row">
-      <span class="filter-label">📍 Dist</span>
-      <div class="filter-opts" id="distOpts">
+      <div class="filter-header" onclick="toggleFilter('distBody','distChevron')">
+        <div class="filter-header-left"><i class="ti ti-map-pin filter-header-icon"></i><span class="filter-header-label">Distance</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><span class="filter-header-value" id="distVal">Any</span><i class="ti ti-chevron-down filter-chevron" id="distChevron"></i></div>
+      </div>
+      <div class="filter-body" id="distBody">
         <button class="fopt active" data-dist="">Any</button>
         <button class="fopt" data-dist="1000">1km</button>
         <button class="fopt" data-dist="5000">5km</button>
         <button class="fopt" data-dist="10000">10km</button>
         <button class="fopt" data-dist="25000">25km</button>
       </div>
+      <div class="location-hint" id="locationHint"></div>
     </div>
-    <div class="location-hint" id="locationHint"></div>
-    <div class="filter-row" style="margin-top:4px">
-      <span class="filter-label">🕐 Open</span>
-      <div class="filter-opts">
-        <button class="fopt" id="openNowBtn">Open now only</button>
+
+    <!-- Open now -->
+    <div class="filter-row">
+      <div class="filter-header" onclick="document.getElementById('openNowBtn').click()">
+        <div class="filter-header-left"><i class="ti ti-clock filter-header-icon"></i><span class="filter-header-label">Open Now</span></div>
+        <button class="fopt" id="openNowBtn" style="margin:0" onclick="event.stopPropagation()">Off</button>
       </div>
     </div>
+
   </div>
 
   <div id="activeFiltersBar"></div>
@@ -256,6 +282,22 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 </div>
 
 <script>
+// Accordion toggle — only one open at a time
+function toggleFilter(bodyId, chevronId){
+  const allBodies = ['cuisineBody','priceBody','ratingBody','distBody'];
+  const allChevrons = ['cuisineChevron','priceChevron','ratingChevron','distChevron'];
+  allBodies.forEach((id,i)=>{
+    if(id===bodyId){
+      const isOpen = document.getElementById(id).classList.contains('open');
+      document.getElementById(id).classList.toggle('open',!isOpen);
+      document.getElementById(allChevrons[i]).classList.toggle('open',!isOpen);
+    } else {
+      document.getElementById(id).classList.remove('open');
+      document.getElementById(allChevrons[i]).classList.remove('open');
+    }
+  });
+}
+
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(regs=>{regs.forEach(r=>r.unregister());});}
 
 const BACKEND_URL = 'https://japan-backend-ry5q.onrender.com';
@@ -349,37 +391,53 @@ function updateFilterVisibility(){
 }
 
 // Filter events
-document.getElementById('cuisineOpts').querySelectorAll('.fopt').forEach(btn=>{
+document.getElementById('cuisineBody').querySelectorAll('.fopt').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    document.getElementById('cuisineOpts').querySelectorAll('.fopt').forEach(b=>b.classList.remove('active'));
+    document.getElementById('cuisineBody').querySelectorAll('.fopt').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     filterCuisine=btn.dataset.cuisine;
-    // Cuisine re-triggers actual search
+    document.getElementById('cuisineVal').textContent=btn.dataset.cuisine||'All';
+    document.getElementById('cuisineBody').classList.remove('open');
+    document.getElementById('cuisineChevron').classList.remove('open');
     doSearch(buildSearchQuery(), false);
   });
 });
-document.getElementById('priceOpts').querySelectorAll('.fopt').forEach(btn=>{
+document.getElementById('priceBody').querySelectorAll('.fopt').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    document.getElementById('priceOpts').querySelectorAll('.fopt').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active'); filterPrice=btn.dataset.price; refilter();
+    document.getElementById('priceBody').querySelectorAll('.fopt').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); filterPrice=btn.dataset.price;
+    document.getElementById('priceVal').textContent=btn.dataset.price?['','¥','¥¥','¥¥¥','¥¥¥¥'][btn.dataset.price]:'Any';
+    document.getElementById('priceBody').classList.remove('open');
+    document.getElementById('priceChevron').classList.remove('open');
+    refilter();
   });
 });
-document.getElementById('ratingOpts').querySelectorAll('.fopt').forEach(btn=>{
+document.getElementById('ratingBody').querySelectorAll('.fopt').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    document.getElementById('ratingOpts').querySelectorAll('.fopt').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active'); filterRating=btn.dataset.rating; refilter();
+    document.getElementById('ratingBody').querySelectorAll('.fopt').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); filterRating=btn.dataset.rating;
+    document.getElementById('ratingVal').textContent=btn.dataset.rating?btn.dataset.rating+'+':'Any';
+    document.getElementById('ratingBody').classList.remove('open');
+    document.getElementById('ratingChevron').classList.remove('open');
+    refilter();
   });
 });
-document.getElementById('distOpts').querySelectorAll('.fopt').forEach(btn=>{
+document.getElementById('distBody').querySelectorAll('.fopt').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    document.getElementById('distOpts').querySelectorAll('.fopt').forEach(b=>b.classList.remove('active'));
+    document.getElementById('distBody').querySelectorAll('.fopt').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active'); filterDist=btn.dataset.dist;
+    document.getElementById('distVal').textContent=btn.dataset.dist?parseInt(btn.dataset.dist)/1000+'km':'Any';
+    document.getElementById('distBody').classList.remove('open');
+    document.getElementById('distChevron').classList.remove('open');
     if(filterDist && !locationGranted) requestLocation();
     else if(allPlaces.length) refilter();
   });
 });
 document.getElementById('openNowBtn').addEventListener('click',function(){
-  filterOpen=!filterOpen; this.classList.toggle('toggle-on',filterOpen); refilter();
+  filterOpen=!filterOpen;
+  this.classList.toggle('toggle-on',filterOpen);
+  this.textContent=filterOpen?'On':'Off';
+  refilter();
 });
 
 // Detail panel
@@ -444,7 +502,18 @@ async function doSearch(query, resetFilters=true){
     filterCuisine=''; filterPrice=''; filterRating=''; filterDist=''; filterOpen=false;
     document.querySelectorAll('.fopt').forEach(b=>{b.classList.remove('active','toggle-on');if(b.dataset.cuisine===''||b.dataset.price===''||b.dataset.rating===''||b.dataset.dist==='')b.classList.add('active');});
     document.getElementById('openNowBtn').classList.remove('toggle-on');
+    document.getElementById('openNowBtn').textContent='Off';
     document.getElementById('locationHint').textContent='';
+    ['cuisineVal','priceVal','ratingVal','distVal'].forEach((id,i)=>{
+      const defaults=['All','Any','Any','Any'];
+      if(document.getElementById(id)) document.getElementById(id).textContent=defaults[i];
+    });
+    ['cuisineBody','priceBody','ratingBody','distBody'].forEach(id=>{
+      const el=document.getElementById(id);if(el)el.classList.remove('open');
+    });
+    ['cuisineChevron','priceChevron','ratingChevron','distChevron'].forEach(id=>{
+      const el=document.getElementById(id);if(el)el.classList.remove('open');
+    });
   }
   allPlaces=[];currentPlaces=[];
   const sec=document.getElementById('resultsSection');
