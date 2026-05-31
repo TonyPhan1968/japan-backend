@@ -131,10 +131,120 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 .no-results{text-align:center;padding:2.5rem 1rem}
 .no-results i{font-size:36px;color:var(--border);display:block;margin-bottom:0.75rem}
 .no-results p{font-family:'Shippori Mincho',serif;font-size:13px;color:var(--muted);letter-spacing:0.1em;line-height:1.8}
+
+
+
+/* My Trip styles */
+.trip-section{padding:1.25rem 1.25rem 0}
+.trip-section-title{font-family:'Shippori Mincho',serif;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--crimson);margin-bottom:0.75rem}
+.trip-card{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin-bottom:10px}
+.trip-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.trip-card-icon{width:38px;height:38px;background:var(--paper);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.trip-card-icon i{font-size:18px;color:var(--crimson)}
+.trip-card-title{font-weight:600;font-size:14px;color:var(--ink)}
+.trip-card-subtitle{font-size:12px;color:var(--muted)}
+.trip-flight-route{display:flex;align-items:center;gap:8px;margin:10px 0}
+.trip-airport{text-align:center;flex:1}
+.trip-airport-code{font-size:22px;font-weight:700;color:var(--ink);font-family:'Noto Serif JP',serif}
+.trip-airport-name{font-size:10px;color:var(--muted);margin-top:2px}
+.trip-flight-line{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.trip-flight-line-bar{width:100%;height:1px;background:var(--border);position:relative}
+.trip-flight-line-bar::after{content:'✈';position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:14px;color:var(--crimson)}
+.trip-flight-duration{font-size:10px;color:var(--muted)}
+.trip-times{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+.trip-times span{font-weight:500;color:var(--ink)}
+.trip-badge{display:inline-block;font-size:10px;background:var(--paper);border:0.5px solid var(--border);color:var(--muted);padding:2px 8px;border-radius:20px;margin-top:4px}
+.trip-badge.highlight{background:#fff8e1;border-color:#f9c94e;color:#856404}
+.hotel-dates{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--paper)}
+.hotel-dates-item{text-align:center}
+.hotel-dates-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em}
+.hotel-dates-val{font-size:13px;font-weight:600;color:var(--ink);margin-top:2px}
+.hotel-nights{font-size:11px;color:var(--crimson);font-weight:500}
+.hotel-contact{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.hotel-contact-btn{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--crimson);text-decoration:none;background:var(--paper);border:0.5px solid var(--border);padding:4px 10px;border-radius:20px}
+.jrp-tip{display:flex;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--paper)}
+.jrp-tip:last-child{border-bottom:none}
+.jrp-tip-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.jrp-tip-body{}
+.jrp-tip-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.jrp-tip-text{font-size:12px;color:var(--muted);line-height:1.6}
+.jrp-warning{background:#fdecea;border:0.5px solid #f5b8b4;border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:12px;color:#922b21;line-height:1.6}
+.jrp-warning strong{display:block;margin-bottom:3px}
+.trip-timeline{padding-left:12px;border-left:2px solid var(--crimson);margin:0.5rem 0}
+.trip-timeline-item{position:relative;padding:0 0 12px 16px}
+.trip-timeline-item::before{content:'';position:absolute;left:-7px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--crimson);border:2px solid var(--card)}
+.trip-timeline-date{font-size:10px;color:var(--crimson);font-weight:600;letter-spacing:0.1em;text-transform:uppercase}
+.trip-timeline-text{font-size:13px;font-weight:500;color:var(--ink)}
+.trip-timeline-sub{font-size:11px;color:var(--muted)}
+
+
+/* My Trip */
+.trip-section{padding:1.25rem 1.25rem 0}
+.trip-section-title{font-family:'Shippori Mincho',serif;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:var(--crimson);margin-bottom:0.75rem}
+.trip-card{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin-bottom:10px}
+.trip-card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.trip-card-icon{width:38px;height:38px;background:var(--paper);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.trip-card-icon i{font-size:18px;color:var(--crimson)}
+.trip-card-title{font-weight:600;font-size:14px;color:var(--ink)}
+.trip-card-subtitle{font-size:12px;color:var(--muted)}
+.trip-flight-route{display:flex;align-items:center;gap:8px;margin:10px 0}
+.trip-airport{text-align:center;flex:1}
+.trip-airport-code{font-size:22px;font-weight:700;color:var(--ink);font-family:'Noto Serif JP',serif}
+.trip-airport-name{font-size:10px;color:var(--muted);margin-top:2px}
+.trip-flight-line{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.trip-flight-line-bar{width:100%;height:1px;background:var(--border);position:relative}
+.trip-flight-line-bar::after{content:'✈';position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:14px;color:var(--crimson)}
+.trip-flight-duration{font-size:10px;color:var(--muted)}
+.trip-times{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+.trip-times span{font-weight:500;color:var(--ink)}
+.trip-badge{display:inline-block;font-size:11px;background:var(--paper);border:0.5px solid var(--border);color:var(--muted);padding:3px 10px;border-radius:20px;margin-top:6px}
+.trip-badge.highlight{background:#fff8e1;border-color:#f9c94e;color:#856404}
+.hotel-dates{display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding-top:8px;border-top:0.5px solid var(--paper)}
+.hotel-dates-item{text-align:center}
+.hotel-dates-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em}
+.hotel-dates-val{font-size:13px;font-weight:600;color:var(--ink);margin-top:2px}
+.hotel-nights{font-size:12px;color:var(--crimson);font-weight:500}
+.hotel-contact{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.hotel-contact-btn{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--crimson);text-decoration:none;background:var(--paper);border:0.5px solid var(--border);padding:4px 10px;border-radius:20px}
+.jrp-tip{display:flex;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--paper)}
+.jrp-tip:last-child{border-bottom:none}
+.jrp-tip-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.jrp-tip-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.jrp-tip-text{font-size:12px;color:var(--muted);line-height:1.6}
+.jrp-warning{background:#fdecea;border:0.5px solid #f5b8b4;border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:12px;color:#922b21;line-height:1.6}
+.jrp-warning strong{display:block;margin-bottom:3px}
+.trip-timeline{padding-left:12px;border-left:2px solid var(--crimson);margin:0.5rem 0}
+.trip-timeline-item{position:relative;padding:0 0 12px 16px}
+.trip-timeline-item::before{content:'';position:absolute;left:-7px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--crimson);border:2px solid var(--card)}
+.trip-timeline-date{font-size:10px;color:var(--crimson);font-weight:600;letter-spacing:0.1em;text-transform:uppercase}
+.trip-timeline-text{font-size:13px;font-weight:500;color:var(--ink)}
+.trip-timeline-sub{font-size:11px;color:var(--muted)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* AI Search */
+.ai-search-wrap{max-width:580px;margin:0 auto 1.25rem}
+.ai-search-box{display:flex;align-items:center;background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:4px 4px 4px 14px;transition:border-color 0.2s}
+.ai-search-box:focus-within{border-color:var(--crimson);box-shadow:0 0 0 3px rgba(192,57,43,0.08)}
+.ai-search-icon{font-size:16px;color:var(--crimson);flex-shrink:0;margin-right:6px}
+.ai-search-input{flex:1;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);outline:none;padding:8px 0;min-width:0}
+.ai-search-input::placeholder{color:#b0a89b}
+.ai-search-btn{width:34px;height:34px;background:var(--crimson);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
+.ai-search-btn:active{background:#a93226}
+.ai-search-btn i{color:#fff;font-size:15px}
+.ai-answer{background:var(--card);border:0.5px solid var(--border);border-radius:12px;padding:1rem 1.1rem;margin-top:8px;font-size:13px;line-height:1.7;color:var(--ink);text-align:left;animation:cardIn 0.3s ease}
+.ai-answer .ai-loading{display:flex;align-items:center;gap:8px;color:var(--muted);font-style:italic;font-size:13px}
+.ai-answer .ai-loading .spinner{width:18px;height:18px;border-width:2px;margin:0}
+
+/* My Trip button */
+.my-trip-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;background:transparent;border:1.5px solid var(--border);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all 0.2s;margin-bottom:1rem;-webkit-tap-highlight-color:transparent}
+.my-trip-btn:active{background:var(--ink);border-color:var(--ink);color:#fff}
+.my-trip-btn i{font-size:15px}
 </style>
 </head>
 <body>
 
+<div id="tabSearch">
 <div class="hero">
   <div class="kamon">
     <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
@@ -161,9 +271,21 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
     <button class="city-btn" data-city="Osaka"><i class="ti ti-building"></i> Osaka</button>
   </div>
 
-  <div class="search-wrap">
-    <input class="search-input" id="searchInput" type="text" placeholder="e.g. ramen in Shibuya, jazz bars…" autocomplete="off"/>
-    <button class="search-btn" id="searchBtn"><i class="ti ti-search" style="color:#fff;font-size:15px"></i></button>
+  <!-- AI Search bar -->
+  <div class="ai-search-wrap">
+    <div class="ai-search-box">
+      <i class="ti ti-sparkles ai-search-icon"></i>
+      <input class="ai-search-input" id="aiSearchInput" type="text" placeholder="Ask me anything about Japan…" autocomplete="off"/>
+      <button class="ai-search-btn" id="aiSearchBtn"><i class="ti ti-arrow-up"></i></button>
+    </div>
+    <div class="ai-answer" id="aiAnswer" style="display:none"></div>
+  </div>
+
+  <!-- My Trip button -->
+  <div style="text-align:center;margin-bottom:1.25rem">
+    <button onclick="switchTab('trip')" class="my-trip-btn">
+      <i class="ti ti-calendar-event"></i> My Trip
+    </button>
   </div>
 
   <div class="pills">
@@ -275,6 +397,124 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
   </div>
 </div>
 
+</div><!-- end tabSearch -->
+
+<!-- My Trip Tab -->
+<div class="tab-content" id="tabTrip">
+
+  <div class="trip-section">
+    <div class="trip-section-title">Flights</div>
+    <div class="trip-card">
+      <div class="trip-card-header">
+        <div class="trip-card-icon"><i class="ti ti-plane-departure"></i></div>
+        <div><div class="trip-card-title">Japan Airlines &middot; JL0042</div><div class="trip-card-subtitle">Thursday 25 June 2026</div></div>
+      </div>
+      <div class="trip-flight-route">
+        <div class="trip-airport"><div class="trip-airport-code">LHR</div><div class="trip-airport-name">London Heathrow</div></div>
+        <div class="trip-flight-line"><div class="trip-flight-line-bar"></div><div class="trip-flight-duration">~12h 35m</div></div>
+        <div class="trip-airport"><div class="trip-airport-code">HND</div><div class="trip-airport-name">Tokyo Haneda</div></div>
+      </div>
+      <div class="trip-times">Departs <span>09:10</span> &nbsp;&middot;&nbsp; Arrives <span>06:45 (+1 day)</span></div>
+      <div class="trip-badge highlight">Arrives 26 Jun — next day</div>
+    </div>
+    <div class="trip-card">
+      <div class="trip-card-header">
+        <div class="trip-card-icon"><i class="ti ti-plane-arrival"></i></div>
+        <div><div class="trip-card-title">Finnair &middot; AY0074</div><div class="trip-card-subtitle">Saturday 11 July 2026</div></div>
+      </div>
+      <div class="trip-flight-route">
+        <div class="trip-airport"><div class="trip-airport-code">NRT</div><div class="trip-airport-name">Tokyo Narita</div></div>
+        <div class="trip-flight-line"><div class="trip-flight-line-bar"></div><div class="trip-flight-duration">~9h 50m</div></div>
+        <div class="trip-airport"><div class="trip-airport-code">HEL</div><div class="trip-airport-name">Helsinki Vantaa</div></div>
+      </div>
+      <div class="trip-times">Departs <span>23:05</span> &nbsp;&middot;&nbsp; Arrives <span>05:55 (+1 day)</span></div>
+      <div class="trip-badge">Note: Departs from Narita, not Haneda</div>
+    </div>
+  </div>
+
+  <div class="trip-section">
+    <div class="trip-section-title">Hotels</div>
+    <div class="trip-card">
+      <div class="trip-card-header">
+        <div class="trip-card-icon"><i class="ti ti-building"></i></div>
+        <div><div class="trip-card-title">The b Akasaka-Mitsuke</div><div class="trip-card-subtitle">Tokyo &middot; Minato-ku, Akasaka 3-21-7</div></div>
+      </div>
+      <div class="hotel-dates">
+        <div class="hotel-dates-item"><div class="hotel-dates-label">Check-in</div><div class="hotel-dates-val">26 Jun</div></div>
+        <div class="hotel-nights">6 nights</div>
+        <div class="hotel-dates-item"><div class="hotel-dates-label">Check-out</div><div class="hotel-dates-val">2 Jul</div></div>
+      </div>
+      <div class="hotel-contact">
+        <a class="hotel-contact-btn" href="tel:+81335893610"><i class="ti ti-phone"></i> +81 3-3589-3610</a>
+        <a class="hotel-contact-btn" href="https://www.google.com/maps/dir/?api=1&destination=The+b+Akasaka-Mitsuke+Tokyo" target="_blank"><i class="ti ti-map-2"></i> Directions</a>
+      </div>
+    </div>
+    <div class="trip-card">
+      <div class="trip-card-header">
+        <div class="trip-card-icon"><i class="ti ti-building"></i></div>
+        <div><div class="trip-card-title">Toyoko Inn Osaka Umeda Higashi</div><div class="trip-card-subtitle">Osaka &middot; 5-3-25 Nishitemma, Kita-ku</div></div>
+      </div>
+      <div class="hotel-dates">
+        <div class="hotel-dates-item"><div class="hotel-dates-label">Check-in</div><div class="hotel-dates-val">2 Jul</div></div>
+        <div class="hotel-nights">3 nights</div>
+        <div class="hotel-dates-item"><div class="hotel-dates-label">Check-out</div><div class="hotel-dates-val">5 Jul</div></div>
+      </div>
+      <div class="hotel-contact">
+        <a class="hotel-contact-btn" href="https://www.google.com/maps/dir/?api=1&destination=Toyoko+Inn+Osaka+Umeda+Higashi" target="_blank"><i class="ti ti-map-2"></i> Directions</a>
+      </div>
+    </div>
+    <div class="trip-card">
+      <div class="trip-card-header">
+        <div class="trip-card-icon"><i class="ti ti-building"></i></div>
+        <div><div class="trip-card-title">Laon Inn Gion Nawate</div><div class="trip-card-subtitle">Kyoto &middot; 16-1 Yamatocho, Higashiyama-ku</div></div>
+      </div>
+      <div class="hotel-dates">
+        <div class="hotel-dates-item"><div class="hotel-dates-label">Check-in</div><div class="hotel-dates-val">5 Jul</div></div>
+        <div class="hotel-nights">3 nights</div>
+        <div class="hotel-dates-item"><div class="hotel-dates-label">Check-out</div><div class="hotel-dates-val">8 Jul</div></div>
+      </div>
+      <div class="hotel-contact">
+        <a class="hotel-contact-btn" href="tel:+81753545471"><i class="ti ti-phone"></i> +81 75-354-5471</a>
+        <a class="hotel-contact-btn" href="https://www.google.com/maps/dir/?api=1&destination=Laon+Inn+Gion+Nawate+Kyoto" target="_blank"><i class="ti ti-map-2"></i> Directions</a>
+      </div>
+    </div>
+    <div class="trip-card">
+      <div class="trip-card-header">
+        <div class="trip-card-icon"><i class="ti ti-building"></i></div>
+        <div><div class="trip-card-title">Hop Inn Tokyo Asakusa</div><div class="trip-card-subtitle">Tokyo &middot; 1-7-8 Hanakawado, Taito City</div></div>
+      </div>
+      <div class="hotel-dates">
+        <div class="hotel-dates-item"><div class="hotel-dates-label">Check-in</div><div class="hotel-dates-val">8 Jul</div></div>
+        <div class="hotel-nights">3 nights</div>
+        <div class="hotel-dates-item"><div class="hotel-dates-label">Check-out</div><div class="hotel-dates-val">11 Jul</div></div>
+      </div>
+      <div class="hotel-contact">
+        <a class="hotel-contact-btn" href="tel:+81338416070"><i class="ti ti-phone"></i> +81 3-3841-6070</a>
+        <a class="hotel-contact-btn" href="https://www.google.com/maps/dir/?api=1&destination=Hop+Inn+Tokyo+Asakusa" target="_blank"><i class="ti ti-map-2"></i> Directions</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="trip-section" style="padding-bottom:3rem">
+    <div class="trip-section-title">Japan Rail Pass Tips</div>
+    <div class="jrp-warning"><strong>Do NOT take Nozomi or Mizuho Shinkansen</strong>These are the fastest bullet trains but your JR Pass is NOT valid on them. Always take Hikari or Sakura instead — only slightly slower.</div>
+    <div class="trip-card">
+      <div class="jrp-tip"><div class="jrp-tip-icon">✅</div><div class="jrp-tip-body"><div class="jrp-tip-title">What is covered</div><div class="jrp-tip-text">All JR bullet trains except Nozomi/Mizuho, local JR trains, JR buses, and the Narita Express (N'EX) from Narita airport to Tokyo.</div></div></div>
+      <div class="jrp-tip"><div class="jrp-tip-icon">🎫</div><div class="jrp-tip-body"><div class="jrp-tip-title">Book reserved seats early</div><div class="jrp-tip-text">Reserved seats are free with your pass. Book at any JR ticket office as soon as you arrive. Tokyo to Osaka fills up fast.</div></div></div>
+      <div class="jrp-tip"><div class="jrp-tip-icon">🚉</div><div class="jrp-tip-body"><div class="jrp-tip-title">Your key routes</div><div class="jrp-tip-text">Tokyo to Osaka: Hikari Shinkansen (~3h). Osaka to Kyoto: JR Kyoto Line (~15 min). Kyoto to Tokyo: Hikari Shinkansen (~2h15). All covered.</div></div></div>
+      <div class="jrp-tip"><div class="jrp-tip-icon">✈️</div><div class="jrp-tip-body"><div class="jrp-tip-title">Airport trains</div><div class="jrp-tip-text">Narita to Tokyo: N'EX covered by pass. Haneda to Tokyo: NOT covered — take Tokyo Monorail (~500 yen) or Keikyu Line.</div></div></div>
+      <div class="jrp-tip"><div class="jrp-tip-icon">📅</div><div class="jrp-tip-body"><div class="jrp-tip-title">Activate wisely</div><div class="jrp-tip-text">Exchange your voucher at Haneda or Narita on arrival. Choose your activation date carefully — the pass runs for consecutive days so activate it when you plan to start travelling between cities.</div></div></div>
+      <div class="jrp-tip"><div class="jrp-tip-icon">💰</div><div class="jrp-tip-body"><div class="jrp-tip-title">Is it worth it?</div><div class="jrp-tip-text">Tokyo to Osaka alone costs ~13,870 yen one way. A 14-day Ordinary pass is 50,000 yen — your itinerary includes Tokyo, Osaka and Kyoto round trips so it pays for itself easily.</div></div></div>
+    </div>
+  </div>
+
+  <div style="padding:1.5rem 1.25rem 3rem;text-align:center">
+    <button onclick="switchTab('search')" style="display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:var(--crimson);color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent">
+      <i class="ti ti-arrow-left" style="font-size:16px"></i> Back to Search
+    </button>
+  </div>
+</div><!-- end tabTrip -->
+
 <div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"></div>
 <div class="detail-sheet" id="detailSheet" style="display:none">
   <div class="detail-handle"></div>
@@ -298,6 +538,51 @@ function toggleFilter(bodyId, chevronId){
   });
 }
 
+// ── AI Search ─────────────────────────────────────────────────────────────────
+async function askAI(question){
+  const answerDiv = document.getElementById('aiAnswer');
+  const city = currentCity || 'Japan';
+  answerDiv.style.display = 'block';
+  answerDiv.innerHTML = '<div class="ai-loading"><div class="spinner"></div> Thinking…</div>';
+  try {
+    const resp = await fetch(BACKEND_URL.replace('/search','') + '/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question, city })
+    });
+    const data = await resp.json();
+    const text = data.answer || 'Sorry, I could not get an answer. Please try again.';
+    answerDiv.innerHTML = '<div style="white-space:pre-wrap">'+text+'</div>';
+  } catch(err) {
+    answerDiv.innerHTML = '<div style="color:#922b21">Could not connect. Please try again.<br><small>'+err.message+'</small></div>';
+  }
+}
+
+document.getElementById('aiSearchBtn').addEventListener('click',()=>{
+  const q = document.getElementById('aiSearchInput').value.trim();
+  if(q) askAI(q);
+});
+document.getElementById('aiSearchInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){const q=e.target.value.trim();if(q)askAI(q);}
+});
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active', (i===0&&tab==='search')||(i===1&&tab==='trip'));
+  });
+  document.getElementById('tabSearch').classList.toggle('active', tab==='search');
+  document.getElementById('tabTrip').classList.toggle('active', tab==='trip');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    b.classList.toggle('active',(i===0&&tab==='search')||(i===1&&tab==='trip'));
+  });
+  document.getElementById('tabSearch').classList.toggle('active',tab==='search');
+  document.getElementById('tabTrip').classList.toggle('active',tab==='trip');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 if('serviceWorker' in navigator){navigator.serviceWorker.getRegistrations().then(regs=>{regs.forEach(r=>r.unregister());});}
 
 const BACKEND_URL = 'https://japan-backend-ry5q.onrender.com';
@@ -565,13 +850,7 @@ document.querySelectorAll('.pill').forEach(pill=>{
 });
 
 // Search box
-document.getElementById('searchBtn').addEventListener('click',()=>{
-  const v=document.getElementById('searchInput').value.trim();
-  if(v){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));currentCat='';currentBaseQuery=v;updateFilterVisibility();doSearch(v+' '+currentCity+' Japan');}
-});
-document.getElementById('searchInput').addEventListener('keydown',e=>{
-  if(e.key==='Enter'){const v=e.target.value.trim();if(v){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));currentCat='';currentBaseQuery=v;updateFilterVisibility();doSearch(v+' '+currentCity+' Japan');}}
-});
+
 </script>
 </body>
 </html>
