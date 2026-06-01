@@ -248,7 +248,8 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 .itin-city-title{font-family:'Shippori Mincho',serif;font-size:11px;letter-spacing:0.25em;text-transform:uppercase;color:#c0392b;margin-bottom:0.75rem;padding:0 1.25rem}
 .itin-day{background:#fff;border:0.5px solid #d9d0c3;border-radius:14px;margin:0 1.25rem 10px;overflow:hidden}
 .itin-day-header{padding:10px 14px;background:#f0ebe1;font-weight:600;font-size:13px;color:#1a1008;border-bottom:0.5px solid #d9d0c3}
-.itin-place{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid #f0ebe1}
+.itin-place{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid #f0ebe1;transition:background 0.15s}
+.itin-place:active{background:#faf7f2}
 .itin-place:last-child{border-bottom:none}
 .itin-place-body{flex:1;min-width:0}
 .itin-place-name{font-weight:500;font-size:13px;color:#1a1008;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -799,7 +800,7 @@ document.getElementById('openNowBtn').addEventListener('click',function(){
 });
 
 // Detail panel
-async function openDetail(place){
+async function openDetail(place, fromItinerary=false){
   const sheet=document.getElementById('detailSheet'),overlay=document.getElementById('detailOverlay'),content=document.getElementById('detailContent');
   sheet.style.display='block'; overlay.classList.add('visible');
   content.innerHTML=`<div style="text-align:center;padding:3rem"><div class="spinner" style="margin:0 auto 1rem"></div><div style="font-family:Shippori Mincho,serif;font-size:13px;color:#7a6e61">Loading details…</div></div>`;
@@ -821,7 +822,7 @@ async function openDetail(place){
       hoursHtml=`<div class="detail-section"><div class="detail-section-title">Opening Hours</div>${d.opening_hours.weekday_text.map((line,i)=>{const dn=line.split(':')[0];const tm=line.substring(dn.length+1).trim();const it=((i+1)%7)===todayIdx;return`<div class="hours-row ${it?'today':''}"><span class="hours-day">${dn}</span><span class="hours-time">${tm}</span></div>`;}).join('')}</div>`;
     }
     content.innerHTML=`<div style="position:relative"><div class="detail-photos">${photoHtml}</div><button class="close-btn" onclick="closeDetail()"><i class="ti ti-x"></i></button></div><div class="detail-body"><div class="detail-name">${d.name}</div><div class="detail-address">${d.formatted_address}</div><div class="detail-meta">${ratingHtml}${typeHtml}${openHtml}${priceHtml}</div><div class="detail-actions"><a class="detail-btn primary" href="${directionsUrl}" target="_blank"><i class="ti ti-directions"></i> Directions</a>
-          <button class="detail-btn" onclick='showSaveDialog(${JSON.stringify({place_id:d.place_id,name:d.name,formatted_address:d.formatted_address,rating:d.rating,types:d.types})})'><i class="ti ti-bookmark"></i> Save</button>
+          ${fromItinerary ? '' : `<button class="detail-btn" onclick='showSaveDialog(${JSON.stringify({place_id:d.place_id,name:d.name,formatted_address:d.formatted_address,rating:d.rating,types:d.types})})'><i class="ti ti-bookmark"></i> Save</button>`}
           ${websiteBtn}${phoneBtn}</div>${hoursHtml}</div>`;
   }catch(err){content.innerHTML=`<div style="padding:1.5rem"><div class="error-box">Could not load details.<br><small>${err.message}</small></div></div>`;}
 }
@@ -1021,14 +1022,19 @@ function removeFromItinerary(city,dateKey,placeId){
   renderItineraryContent();
 }
 
+// Lookup table for itinerary places — avoids JSON in onclick attributes
+const itinPlaceLookup = {};
+
 function renderItineraryContent(){
   const data=getItinerary();
   const container=document.getElementById('itineraryContent');
+  // Clear lookup
+  Object.keys(itinPlaceLookup).forEach(k=>delete itinPlaceLookup[k]);
   let html='<div style="padding:1.25rem 0 0">';
   let hasAny=false;
+  let idx=0;
   CITIES.forEach(city=>{
     if(!data[city])return;
-    // Sort by actual date order from CITY_DATES
     const cityDates=CITY_DATES[city]||[];
     const days=Object.keys(data[city]).sort((a,b)=>cityDates.indexOf(a)-cityDates.indexOf(b));
     if(!days.length)return;
@@ -1040,8 +1046,18 @@ function renderItineraryContent(){
       const label=formatDate(dateKey);
       html+=`<div class="itin-day"><div class="itin-day-header">${label}</div>`;
       places.forEach(p=>{
+        const key='itp_'+idx++;
+        itinPlaceLookup[key]=p;
         const dirUrl=`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(p.name+' '+(p.formatted_address||''))}`;
-        html+=`<div class="itin-place"><div class="itin-place-body"><div class="itin-place-name">${p.name}</div><div class="itin-place-addr">${p.formatted_address||''}</div></div><div class="itin-place-actions"><a class="itin-dir-btn" href="${dirUrl}" target="_blank"><i class="ti ti-directions"></i></a><button class="itin-del-btn" onclick="removeFromItinerary('${city}','${dateKey}','${p.place_id}')"><i class="ti ti-trash"></i></button></div></div>`;
+        html+=`<div class="itin-place" onclick="openItinPlace('${key}')" style="cursor:pointer">
+          <div class="itin-place-body">
+            <div class="itin-place-name">${p.name}</div>
+            <div class="itin-place-addr">${p.formatted_address||''}</div>
+          </div>
+          <div class="itin-place-actions">
+            <button class="itin-del-btn" onclick="event.stopPropagation();removeFromItinerary('${city}','${dateKey}','${p.place_id}')"><i class="ti ti-trash"></i></button>
+          </div>
+        </div>`;
       });
       html+='</div>';
     });
@@ -1050,6 +1066,11 @@ function renderItineraryContent(){
   if(!hasAny)html+=`<div class="itin-empty">No places saved yet<br>Tap <strong>Save</strong> on any place<br>to add it here</div>`;
   html+='</div>';
   container.innerHTML=html;
+}
+
+function openItinPlace(key){
+  const place = itinPlaceLookup[key];
+  if(place) openDetail(place, true);
 }
 
 function toggleItinerary(){
