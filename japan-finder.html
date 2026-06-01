@@ -237,9 +237,9 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 .ai-answer .ai-loading .spinner{width:18px;height:18px;border-width:2px;margin:0}
 
 /* My Trip button */
-.my-trip-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 20px;background:transparent;border:1.5px solid var(--border);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all 0.2s;margin-bottom:1rem;-webkit-tap-highlight-color:transparent}
-.my-trip-btn:active{background:var(--ink);border-color:var(--ink);color:#fff}
-.my-trip-btn i{font-size:15px}
+.my-trip-btn{display:inline-flex;align-items:center;gap:7px;padding:6px 18px;background:var(--paper);border:1px solid var(--border);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;transition:all 0.2s;margin-bottom:1.5rem;-webkit-tap-highlight-color:transparent;letter-spacing:0.05em}
+.my-trip-btn:active,.my-trip-btn.active{background:var(--crimson);border-color:var(--crimson);color:#fff}
+.my-trip-btn i{font-size:14px}
 </style>
 </head>
 <body>
@@ -263,8 +263,22 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
   </div>
   <div class="tagline">Japan 2026 · 日本の旅</div>
   <h1 class="hero-title">What can I help you<br>find in <em>Japan</em> today?</h1>
-  <div class="year-badge">Your 2026 guide</div>
+  <button onclick="toggleMyTrip()" class="my-trip-btn" id="myTripBtn">
+    <i class="ti ti-calendar-event"></i> My Trip
+  </button>
 
+  <!-- My Trip inline panel -->
+  <div id="myTripPanel" style="display:none">
+    <div id="myTripContent"></div>
+    <div style="text-align:center;padding:1rem 0 0.5rem">
+      <button onclick="toggleMyTrip()" style="display:inline-flex;align-items:center;gap:6px;padding:10px 22px;background:var(--crimson);color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer">
+        <i class="ti ti-x"></i> Close
+      </button>
+    </div>
+  </div>
+
+  <!-- Main search section (hidden when My Trip open) -->
+  <div id="mainSection">
   <div class="city-switcher">
     <button class="city-btn active" data-city="Tokyo"><i class="ti ti-building-skyscraper"></i> Tokyo</button>
     <button class="city-btn" data-city="Kyoto"><i class="ti ti-building"></i> Kyoto</button>
@@ -275,24 +289,17 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
   <div class="ai-search-wrap">
     <div class="ai-search-box">
       <i class="ti ti-sparkles ai-search-icon"></i>
-      <input class="ai-search-input" id="aiSearchInput" type="text" placeholder="Ask me anything about Japan…" autocomplete="off"/>
+      <input class="ai-search-input" id="aiSearchInput" type="text" placeholder="Konnichiwa, how can I help you?" autocomplete="off"/>
       <button class="ai-search-btn" id="aiSearchBtn"><i class="ti ti-arrow-up"></i></button>
     </div>
     <div class="ai-answer" id="aiAnswer" style="display:none"></div>
-  </div>
-
-  <!-- My Trip button -->
-  <div style="text-align:center;margin-bottom:1.25rem">
-    <button onclick="switchTab('trip')" class="my-trip-btn">
-      <i class="ti ti-calendar-event"></i> My Trip
-    </button>
   </div>
 
   <div class="pills">
     <button class="pill" data-cat="restaurants" data-query="best restaurants"><i class="ti ti-tools-kitchen-2"></i> Restaurants</button>
     <button class="pill" data-cat="places" data-query="top tourist attractions interesting places"><i class="ti ti-map-pin"></i> Interesting Places</button>
     <button class="pill" data-cat="music" data-query="live music venues jazz bars"><i class="ti ti-music"></i> Music Venues</button>
-    <button class="pill" data-cat="sports" data-query="sports venues stadiums arenas"><i class="ti ti-ball-baseball"></i> Sports</button>
+    <button class="pill" data-cat="sumo" data-query="sumo wrestling tournaments venues"><i class="ti ti-trophy"></i> Sumo Wrestling</button>
     <button class="pill" data-cat="karting" data-query="go-kart karting tracks indoor racing"><i class="ti ti-steering-wheel"></i> Karting</button>
     <button class="pill" data-cat="shopping" data-query="shopping centres malls markets"><i class="ti ti-shopping-bag"></i> Shopping</button>
     <button class="pill" data-cat="cafes" data-query="cafes coffee shops"><i class="ti ti-coffee"></i> Cafes</button>
@@ -397,6 +404,7 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
   </div>
 </div>
 
+  </div><!-- end mainSection -->
 </div><!-- end tabSearch -->
 
 <!-- My Trip Tab -->
@@ -508,11 +516,6 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
     </div>
   </div>
 
-  <div style="padding:1.5rem 1.25rem 3rem;text-align:center">
-    <button onclick="switchTab('search')" style="display:inline-flex;align-items:center;gap:8px;padding:13px 28px;background:var(--crimson);color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent">
-      <i class="ti ti-arrow-left" style="font-size:16px"></i> Back to Search
-    </button>
-  </div>
 </div><!-- end tabTrip -->
 
 <div class="detail-overlay" id="detailOverlay" onclick="closeDetail()"></div>
@@ -560,11 +563,49 @@ async function askAI(question){
 
 document.getElementById('aiSearchBtn').addEventListener('click',()=>{
   const q = document.getElementById('aiSearchInput').value.trim();
-  if(q) askAI(q);
+  const answerDiv = document.getElementById('aiAnswer');
+  // If answer is visible and no new query typed, collapse
+  if(answerDiv.style.display !== 'none' && !q){
+    answerDiv.style.display = 'none';
+    return;
+  }
+  // If answer is visible and same question, collapse
+  if(answerDiv.style.display !== 'none' && answerDiv.dataset.lastQ === q){
+    answerDiv.style.display = 'none';
+    answerDiv.dataset.lastQ = '';
+    return;
+  }
+  if(q){ answerDiv.dataset.lastQ = q; askAI(q); }
 });
 document.getElementById('aiSearchInput').addEventListener('keydown',e=>{
-  if(e.key==='Enter'){const q=e.target.value.trim();if(q)askAI(q);}
+  if(e.key==='Enter'){const q=e.target.value.trim();if(q){document.getElementById('aiAnswer').dataset.lastQ=q;askAI(q);}}
 });
+
+// ── My Trip toggle ────────────────────────────────────────────────────────────
+function toggleMyTrip(){
+  const panel   = document.getElementById('myTripPanel');
+  const main    = document.getElementById('mainSection');
+  const results = document.getElementById('resultsSection');
+  const btn     = document.getElementById('myTripBtn');
+  const isOpen  = panel.style.display !== 'none';
+
+  if(isOpen){
+    // Close
+    panel.style.display = 'none';
+    main.style.display  = 'block';
+    if(results) results.style.display = currentPlaces.length ? 'block' : 'none';
+    btn.classList.remove('active');
+  } else {
+    // Open — populate content from tabTrip
+    const tripContent = document.getElementById('tabTrip').innerHTML;
+    document.getElementById('myTripContent').innerHTML = tripContent;
+    panel.style.display = 'block';
+    main.style.display  = 'none';
+    if(results) results.style.display = 'none';
+    btn.classList.add('active');
+    panel.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
 
 function switchTab(tab){
   document.querySelectorAll('.tab-btn').forEach((b,i)=>{
