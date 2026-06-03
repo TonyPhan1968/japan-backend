@@ -227,10 +227,10 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 
 /* AI Search */
 .ai-search-wrap{max-width:580px;margin:0 auto 1.25rem}
-.ai-search-box{display:flex;align-items:center;background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:4px 4px 4px 14px;transition:border-color 0.2s}
+.ai-search-box{display:flex;align-items:flex-end;background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:4px 4px 4px 14px;transition:border-color 0.2s}
 .ai-search-box:focus-within{border-color:var(--crimson);box-shadow:0 0 0 3px rgba(192,57,43,0.08)}
 .ai-search-icon{font-size:16px;color:var(--crimson);flex-shrink:0;margin-right:6px}
-.ai-search-input{flex:1;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);outline:none;padding:8px 0;min-width:0}
+.ai-search-input{flex:1;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);outline:none;padding:8px 0;min-width:0;resize:none;overflow:hidden;line-height:1.5;max-height:120px}
 .ai-search-input::placeholder{color:#b0a89b}
 .ai-search-btn{width:34px;height:34px;background:var(--crimson);border:none;border-radius:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s}
 .ai-search-btn:active{background:#a93226}
@@ -314,13 +314,13 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
   <div class="ai-search-wrap">
     <div class="ai-search-box">
       <i class="ti ti-sparkles ai-search-icon"></i>
-      <input class="ai-search-input" id="aiSearchInput" type="text" placeholder="Konnichiwa, how can I help you?" autocomplete="off"/>
+      <textarea class="ai-search-input" id="aiSearchInput" placeholder="Konnichiwa, how can I help you?" autocomplete="off" rows="1"></textarea>
       <button class="ai-search-btn" id="aiSearchBtn"><i class="ti ti-arrow-up"></i></button>
     </div>
     <div class="ai-answer" id="aiAnswer" style="display:none"></div>
   </div>
 
-  <div class="pills">
+  <div class="pills" id="pillsSection">
     <button class="pill" data-cat="restaurants" data-query="best restaurants"><i class="ti ti-tools-kitchen-2"></i> Restaurants</button>
     <button class="pill" data-cat="places" data-query="top tourist attractions interesting places"><i class="ti ti-map-pin"></i> Interesting Places</button>
     <button class="pill" data-cat="music" data-query="live music venues jazz bars"><i class="ti ti-music"></i> Music Venues</button>
@@ -582,8 +582,10 @@ function toggleFilter(bodyId, chevronId){
 // ── AI Search ─────────────────────────────────────────────────────────────────
 async function askAI(question){
   const answerDiv = document.getElementById('aiAnswer');
+  const pillsEl = document.getElementById('pillsSection');
   const city = currentCity || 'Japan';
   answerDiv.style.display = 'block';
+  if(pillsEl) pillsEl.style.display = 'none';
   answerDiv.innerHTML = '<div class="ai-loading"><div class="spinner"></div> Thinking…</div>';
   try {
     const resp = await fetch(BACKEND_URL.replace('/search','') + '/ask', {
@@ -599,24 +601,51 @@ async function askAI(question){
   }
 }
 
-document.getElementById('aiSearchBtn').addEventListener('click',()=>{
-  const q = document.getElementById('aiSearchInput').value.trim();
-  const answerDiv = document.getElementById('aiAnswer');
-  // If answer is visible and no new query typed, collapse
-  if(answerDiv.style.display !== 'none' && !q){
-    answerDiv.style.display = 'none';
-    return;
-  }
-  // If answer is visible and same question, collapse
-  if(answerDiv.style.display !== 'none' && answerDiv.dataset.lastQ === q){
-    answerDiv.style.display = 'none';
-    answerDiv.dataset.lastQ = '';
-    return;
-  }
-  if(q){ answerDiv.dataset.lastQ = q; askAI(q); }
+const aiInput = document.getElementById('aiSearchInput');
+const aiBtn   = document.getElementById('aiSearchBtn');
+const aiAnswer = document.getElementById('aiAnswer');
+
+// Auto-grow textarea
+aiInput.addEventListener('input', ()=>{
+  aiInput.style.height = 'auto';
+  aiInput.style.height = aiInput.scrollHeight + 'px';
 });
-document.getElementById('aiSearchInput').addEventListener('keydown',e=>{
-  if(e.key==='Enter'){const q=e.target.value.trim();if(q){document.getElementById('aiAnswer').dataset.lastQ=q;askAI(q);}}
+
+// Auto-clear when user starts typing after an answer is shown
+let lastAnsweredQ = '';
+aiInput.addEventListener('focus', ()=>{
+  if(aiAnswer.style.display !== 'none' && aiInput.value === lastAnsweredQ){
+    aiInput.value = '';
+    aiInput.style.height = 'auto';
+  }
+});
+
+aiBtn.addEventListener('click',()=>{
+  const q = aiInput.value.trim();
+  // If answer visible and no new query, collapse and show pills
+  if(aiAnswer.style.display !== 'none' && !q){
+    aiAnswer.style.display = 'none';
+    document.getElementById('pillsSection').style.display = 'flex';
+    return;
+  }
+  // If same question shown, collapse
+  if(aiAnswer.style.display !== 'none' && lastAnsweredQ === q){
+    aiAnswer.style.display = 'none';
+    document.getElementById('pillsSection').style.display = 'flex';
+    aiInput.value = '';
+    aiInput.style.height = 'auto';
+    lastAnsweredQ = '';
+    return;
+  }
+  if(q){ lastAnsweredQ = q; askAI(q); }
+});
+
+aiInput.addEventListener('keydown',e=>{
+  if(e.key==='Enter' && !e.shiftKey){
+    e.preventDefault();
+    const q=aiInput.value.trim();
+    if(q){ lastAnsweredQ=q; askAI(q); }
+  }
 });
 
 // ── My Trip toggle ────────────────────────────────────────────────────────────

@@ -79,7 +79,7 @@ app.post('/ask', async (req, res) => {
   const { question, city } = req.body;
   if (!question) return res.status(400).json({ error: 'Missing question' });
 
-  const systemPrompt = `You are a friendly and knowledgeable Japan travel expert. The user is visiting Japan in June-July 2026, staying in Tokyo, Kyoto and Osaka. Their itinerary: arrive Tokyo 26 Jun, Tokyo until 2 Jul, Osaka 2-5 Jul, Kyoto 5-8 Jul, back to Tokyo 8-11 Jul, depart 11 Jul. They have a Japan Rail Pass. Answer questions helpfully and concisely in under 150 words. Be specific and practical. The user is currently looking at ${city || 'Japan'}.`;
+  const systemPrompt = `You are a friendly and knowledgeable Japan travel expert. The user is visiting Japan in June-July 2026, staying in Tokyo, Kyoto and Osaka. Their itinerary: arrive Tokyo 26 Jun (Haneda), Tokyo until 2 Jul, Osaka 2-5 Jul, Kyoto 5-8 Jul, back to Tokyo 8-11 Jul, depart 11 Jul (Narita). Do NOT assume they have a Japan Rail Pass unless they explicitly mention it. If asked about train travel, explain all options including IC cards, individual tickets, and whether a rail pass would be worthwhile for their itinerary. Answer helpfully and concisely in under 150 words. Be specific and practical. The user is currently looking at ${city || 'Japan'}.`;
 
   try {
     const response = await axios.post(
