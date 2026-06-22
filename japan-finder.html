@@ -710,9 +710,16 @@ function toggleMyTrip(){
     if(results) results.style.display = currentPlaces.length ? 'block' : 'none';
     btn.classList.remove('active');
   } else {
-    // Open — populate content from tabTrip
-    const tripContent = document.getElementById('tabTrip').innerHTML;
-    document.getElementById('myTripContent').innerHTML = tripContent;
+    // Open — clone only the My Trip sections (flights, hotels, JR tips)
+    // NOT the itinerary panel which is also inside tabTrip
+    const tabTrip = document.getElementById('tabTrip');
+    const clone = tabTrip.cloneNode(true);
+    // Remove the itinerary panel and any add boxes from the clone
+    ['itineraryPanel','itinSearchBox','manualAddBox'].forEach(id=>{
+      const el = clone.querySelector('#'+id);
+      if(el) el.remove();
+    });
+    document.getElementById('myTripContent').innerHTML = clone.innerHTML;
     panel.style.display = 'block';
     main.style.display  = 'none';
     if(results) results.style.display = 'none';
