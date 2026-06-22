@@ -260,6 +260,20 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 .itin-dir-btn{display:flex;align-items:center;gap:3px;font-size:11px;color:#c0392b;text-decoration:none;background:#faf7f2;border:0.5px solid #d9d0c3;padding:4px 9px;border-radius:20px}
 .itin-del-btn{display:flex;align-items:center;font-size:13px;color:#7a6e61;background:#faf7f2;border:0.5px solid #d9d0c3;padding:4px 8px;border-radius:20px;cursor:pointer}
 .itin-empty{text-align:center;padding:3rem 1rem;color:#7a6e61;font-family:'Shippori Mincho',serif;font-size:13px;letter-spacing:0.1em;line-height:1.8}
+.itin-add-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;background:var(--paper);border:1px solid var(--border);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:all 0.2s;-webkit-tap-highlight-color:transparent}
+.itin-add-btn:active{background:var(--ink);border-color:var(--ink);color:#fff}
+.itin-search-wrap{display:flex;gap:6px}
+.itin-search-input{flex:1;padding:10px 14px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--card);border:1.5px solid var(--border);border-radius:10px;outline:none;-webkit-appearance:none}
+.itin-search-input:focus{border-color:var(--crimson)}
+.itin-search-go{width:40px;height:40px;background:var(--crimson);border:none;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.itin-search-go i{color:#fff;font-size:16px}
+.itin-search-result{background:var(--card);border:0.5px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:border-color 0.15s;animation:cardIn 0.2s ease}
+.itin-search-result:active{border-color:var(--crimson)}
+.itin-search-result-name{font-weight:500;font-size:13px;color:var(--ink)}
+.itin-search-result-addr{font-size:11px;color:var(--muted);margin-top:2px}
+.manual-form{background:var(--card);border:0.5px solid var(--border);border-radius:14px;padding:1rem 1.1rem}
+.manual-input{width:100%;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);background:var(--paper);border:0.5px solid var(--border);border-radius:10px;outline:none;margin-bottom:8px;-webkit-appearance:none}
+.manual-input:focus{border-color:var(--crimson)}
 </style>
 </head>
 <body>
@@ -294,6 +308,40 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
   <!-- My Itinerary inline panel -->
   <div id="itineraryPanel" style="display:none">
     <div id="itineraryContent"></div>
+
+    <!-- Add to Itinerary buttons -->
+    <div style="display:flex;gap:8px;justify-content:center;padding:0.75rem 1.25rem 0;flex-wrap:wrap">
+      <button onclick="showItinSearch()" class="itin-add-btn"><i class="ti ti-search"></i> Search & Save</button>
+      <button onclick="showManualAdd()" class="itin-add-btn"><i class="ti ti-pencil"></i> Add Manually</button>
+    </div>
+
+    <!-- Search inside itinerary -->
+    <div id="itinSearchBox" style="display:none;padding:0.75rem 1.25rem 0">
+      <div class="itin-search-wrap">
+        <input type="text" id="itinSearchInput" placeholder="Search for a place…" class="itin-search-input" autocomplete="off"/>
+        <button onclick="runItinSearch()" class="itin-search-go"><i class="ti ti-search"></i></button>
+      </div>
+      <div id="itinSearchResults" style="margin-top:8px"></div>
+    </div>
+
+    <!-- Manual add form -->
+    <div id="manualAddBox" style="display:none;padding:0.75rem 1.25rem 0">
+      <div class="manual-form">
+        <input type="text" id="manualName" placeholder="Place or event name *" class="manual-input"/>
+        <input type="text" id="manualAddr" placeholder="Address or notes (optional)" class="manual-input"/>
+        <div style="font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin:10px 0 6px">City</div>
+        <div style="display:flex;gap:6px;margin-bottom:10px" id="manualCityOpts">
+          <button class="save-city-btn active" data-city="Tokyo">Tokyo</button>
+          <button class="save-city-btn" data-city="Kyoto">Kyoto</button>
+          <button class="save-city-btn" data-city="Osaka">Osaka</button>
+        </div>
+        <div style="font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Date</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px" id="manualDayOpts"></div>
+        <button onclick="confirmManualAdd()" style="width:100%;padding:11px;background:var(--crimson);color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer"><i class="ti ti-plus"></i> Add to Itinerary</button>
+        <button onclick="document.getElementById('manualAddBox').style.display='none'" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:0.5px solid var(--border);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">Cancel</button>
+      </div>
+    </div>
+
     <div style="text-align:center;padding:1rem 0 0.5rem">
       <button onclick="toggleItinerary()" style="display:inline-flex;align-items:center;gap:6px;padding:10px 22px;background:var(--crimson);color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer">
         <i class="ti ti-x"></i> Close
@@ -1106,6 +1154,120 @@ function openItinPlace(key){
   if(place) openDetail(place, true);
 }
 
+// ── Itinerary Search ──────────────────────────────────────────────────────────
+let itinSaveTarget = null;
+
+function showItinSearch(){
+  document.getElementById('itinSearchBox').style.display = 'block';
+  document.getElementById('manualAddBox').style.display = 'none';
+  document.getElementById('itinSearchInput').focus();
+}
+
+async function runItinSearch(){
+  const q = document.getElementById('itinSearchInput').value.trim();
+  if(!q) return;
+  const resultsEl = document.getElementById('itinSearchResults');
+  resultsEl.innerHTML = '<div class="loading-text" style="padding:1rem 0">Searching…</div>';
+  try{
+    const resp = await fetch(`${BACKEND_URL}/search?query=${encodeURIComponent(q+' '+currentCity+' Japan')}`);
+    const data = await resp.json();
+    const places = data.results || [];
+    if(!places.length){ resultsEl.innerHTML='<div style="font-size:13px;color:var(--muted);padding:0.5rem 0">No results found</div>'; return; }
+    resultsEl.innerHTML = '';
+    places.slice(0,8).forEach(p=>{
+      const div = document.createElement('div');
+      div.className = 'itin-search-result';
+      div.innerHTML = `<div class="itin-search-result-name">${p.name}</div><div class="itin-search-result-addr">${p.formatted_address||''}</div>`;
+      div.addEventListener('click',()=>{ itinSaveTarget=p; showItinSaveDialog(); });
+      resultsEl.appendChild(div);
+    });
+  }catch(err){
+    resultsEl.innerHTML='<div style="font-size:12px;color:#922b21">Could not search. Please try again.</div>';
+  }
+}
+
+document.getElementById('itinSearchInput').addEventListener('keydown',e=>{
+  if(e.key==='Enter') runItinSearch();
+});
+
+function showItinSaveDialog(){
+  if(!itinSaveTarget) return;
+  saveTarget = itinSaveTarget;
+  saveCity = 'Tokyo';
+  saveDay = CITY_DATES['Tokyo'][0];
+  document.getElementById('saveDialogName').textContent = saveTarget.name;
+  document.getElementById('saveDialogAddr').textContent = saveTarget.formatted_address || '';
+  document.querySelectorAll('.save-city-btn').forEach(b=>b.classList.toggle('active', b.dataset.city===saveCity));
+  renderDayButtons();
+  document.getElementById('saveOverlay').style.display = 'flex';
+}
+
+// ── Manual Add ────────────────────────────────────────────────────────────────
+let manualCity = 'Tokyo';
+let manualDay  = '';
+
+function showManualAdd(){
+  document.getElementById('manualAddBox').style.display = 'block';
+  document.getElementById('itinSearchBox').style.display = 'none';
+  manualCity = 'Tokyo';
+  manualDay  = CITY_DATES['Tokyo'][0];
+  // Set city buttons
+  document.querySelectorAll('#manualCityOpts .save-city-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.city===manualCity);
+  });
+  renderManualDayButtons();
+}
+
+function renderManualDayButtons(){
+  const container = document.getElementById('manualDayOpts');
+  const dates = CITY_DATES[manualCity] || [];
+  container.innerHTML = '';
+  if(!manualDay || !dates.includes(manualDay)) manualDay = dates[0] || '';
+  dates.forEach(dateStr=>{
+    const btn = document.createElement('button');
+    btn.className = 'save-day-btn' + (dateStr===manualDay?' active':'');
+    btn.textContent = formatDate(dateStr);
+    btn.addEventListener('click',()=>{
+      manualDay = dateStr;
+      document.querySelectorAll('#manualDayOpts .save-day-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+    container.appendChild(btn);
+  });
+}
+
+document.querySelectorAll('#manualCityOpts .save-city-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    manualCity = btn.dataset.city;
+    manualDay  = CITY_DATES[manualCity]?.[0] || '';
+    document.querySelectorAll('#manualCityOpts .save-city-btn').forEach(b=>b.classList.toggle('active', b.dataset.city===manualCity));
+    renderManualDayButtons();
+  });
+});
+
+function confirmManualAdd(){
+  const name = document.getElementById('manualName').value.trim();
+  if(!name){ document.getElementById('manualName').focus(); return; }
+  const addr = document.getElementById('manualAddr').value.trim();
+  const place = {
+    place_id: 'manual_'+Date.now(),
+    name,
+    formatted_address: addr,
+    rating: null,
+    types: ['manual'],
+  };
+  const data = getItinerary();
+  if(!data[manualCity]) data[manualCity] = {};
+  if(!data[manualCity][manualDay]) data[manualCity][manualDay] = [];
+  data[manualCity][manualDay].push(place);
+  setItinerary(data);
+  document.getElementById('manualName').value = '';
+  document.getElementById('manualAddr').value = '';
+  document.getElementById('manualAddBox').style.display = 'none';
+  showToast(name + ' added to ' + manualCity + ' ' + formatDate(manualDay));
+  renderItineraryContent();
+}
+
 function toggleItinerary(){
   const panel=document.getElementById('itineraryPanel');
   const myTrip=document.getElementById('myTripPanel');
@@ -1118,6 +1280,9 @@ function toggleItinerary(){
     main.style.display='block';
     if(results)results.style.display=currentPlaces.length?'block':'none';
     btn.classList.remove('active');
+    document.getElementById('itinSearchBox').style.display='none';
+    document.getElementById('manualAddBox').style.display='none';
+    document.getElementById('itinSearchResults').innerHTML='';
   } else {
     myTrip.style.display='none';
     document.getElementById('myTripBtn').classList.remove('active');
