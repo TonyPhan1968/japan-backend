@@ -256,6 +256,7 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 .itin-place-body{flex:1;min-width:0}
 .itin-place-name{font-weight:500;font-size:13px;color:#1a1008;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .itin-place-addr{font-size:11px;color:#7a6e61;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.itin-place-time{font-size:11px;color:var(--crimson);font-weight:500;margin-top:1px}
 .itin-place-actions{display:flex;gap:6px;flex-shrink:0}
 .itin-dir-btn{display:flex;align-items:center;gap:3px;font-size:11px;color:#c0392b;text-decoration:none;background:#faf7f2;border:0.5px solid #d9d0c3;padding:4px 9px;border-radius:20px}
 .itin-del-btn{display:flex;align-items:center;font-size:13px;color:#7a6e61;background:#faf7f2;border:0.5px solid #d9d0c3;padding:4px 8px;border-radius:20px;cursor:pointer}
@@ -337,6 +338,16 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
         </div>
         <div style="font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Date</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px" id="manualDayOpts"></div>
+        <div style="font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin:10px 0 6px">Time</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <button class="fopt active" id="manualAnytimeBtn" onclick="setManualAnytime()">Anytime</button>
+          <input type="time" id="manualTime" style="padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:13px;border:0.5px solid var(--border);border-radius:10px;color:var(--ink);background:var(--paper);outline:none" oninput="document.getElementById('manualAnytimeBtn').classList.remove('active')"/>
+        </div>
+        <div style="font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin:10px 0 6px">Time</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <button class="fopt active" id="manualAnytimeBtn" onclick="setManualAnytime(event)">Anytime</button>
+          <input type="time" id="manualTime" style="padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:13px;border:0.5px solid var(--border);border-radius:10px;color:var(--ink);background:var(--paper);outline:none" oninput="document.getElementById('manualAnytimeBtn').classList.remove('active')"/>
+        </div>
         <button onclick="confirmManualAdd()" style="width:100%;padding:11px;background:var(--crimson);color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer"><i class="ti ti-plus"></i> Add to Itinerary</button>
         <button onclick="document.getElementById('manualAddBox').style.display='none'" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:0.5px solid var(--border);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">Cancel</button>
       </div>
@@ -1047,7 +1058,16 @@ function showSaveDialog(place){
   document.getElementById('saveDialogAddr').textContent=place.formatted_address||'';
   document.querySelectorAll('.save-city-btn').forEach(b=>b.classList.toggle('active',b.dataset.city===saveCity));
   renderDayButtons();
+  // Reset time
+  document.getElementById('saveTime').value='';
+  document.getElementById('anytimeBtn').classList.add('active');
   document.getElementById('saveOverlay').style.display='flex';
+}
+
+function setAnytime(e){
+  e.preventDefault();
+  document.getElementById('saveTime').value='';
+  document.getElementById('anytimeBtn').classList.add('active');
 }
 
 function renderDayButtons(){
@@ -1085,7 +1105,9 @@ function confirmSave(){
   if(!data[saveCity])data[saveCity]={};
   if(!data[saveCity][saveDay])data[saveCity][saveDay]=[];
   const exists=data[saveCity][saveDay].some(p=>p.place_id===saveTarget.place_id);
-  if(!exists)data[saveCity][saveDay].push(saveTarget);
+  const timeVal = document.getElementById('saveTime').value;
+  const placeWithTime = Object.assign({}, saveTarget, {time: timeVal||'anytime'});
+  if(!exists)data[saveCity][saveDay].push(placeWithTime);
   setItinerary(data);
   closeSaveDialog();
   closeDetail();
@@ -1132,6 +1154,13 @@ function renderItineraryContent(){
       const places=data[city][dateKey];
       if(!places||!places.length)return;
       const label=formatDate(dateKey);
+      // Sort places by time within each day
+      places.sort((a,b)=>{
+        if(a.time==='anytime'&&b.time==='anytime') return 0;
+        if(a.time==='anytime') return 1;
+        if(b.time==='anytime') return -1;
+        return a.time.localeCompare(b.time);
+      });
       html+=`<div class="itin-day"><div class="itin-day-header">${label}</div>`;
       places.forEach(p=>{
         const key='itp_'+idx++;
@@ -1139,7 +1168,7 @@ function renderItineraryContent(){
         const dirUrl=`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(p.name+' '+(p.formatted_address||''))}`;
         html+=`<div class="itin-place" onclick="openItinPlace('${key}')" style="cursor:pointer">
           <div class="itin-place-body">
-            <div class="itin-place-name">${p.name}</div>
+            <div class="itin-place-name">${p.name}</div><div class="itin-place-time">${p.time&&p.time!=="anytime"?p.time:'Anytime'}</div>
             <div class="itin-place-addr">${p.formatted_address||''}</div>
           </div>
           <div class="itin-place-actions">
@@ -1218,11 +1247,19 @@ function showManualAdd(){
   document.getElementById('itinSearchBox').style.display = 'none';
   manualCity = 'Tokyo';
   manualDay  = CITY_DATES['Tokyo'][0];
-  // Set city buttons
   document.querySelectorAll('#manualCityOpts .save-city-btn').forEach(b=>{
     b.classList.toggle('active', b.dataset.city===manualCity);
   });
   renderManualDayButtons();
+  // Reset time
+  document.getElementById('manualTime').value='';
+  document.getElementById('manualAnytimeBtn').classList.add('active');
+}
+
+function setManualAnytime(e){
+  e.preventDefault();
+  document.getElementById('manualTime').value='';
+  document.getElementById('manualAnytimeBtn').classList.add('active');
 }
 
 function renderManualDayButtons(){
@@ -1256,12 +1293,14 @@ function confirmManualAdd(){
   const name = document.getElementById('manualName').value.trim();
   if(!name){ document.getElementById('manualName').focus(); return; }
   const addr = document.getElementById('manualAddr').value.trim();
+  const timeVal = document.getElementById('manualTime').value;
   const place = {
     place_id: 'manual_'+Date.now(),
     name,
     formatted_address: addr,
     rating: null,
     types: ['manual'],
+    time: timeVal||'anytime',
   };
   const data = getItinerary();
   if(!data[manualCity]) data[manualCity] = {};
@@ -1270,6 +1309,8 @@ function confirmManualAdd(){
   setItinerary(data);
   document.getElementById('manualName').value = '';
   document.getElementById('manualAddr').value = '';
+  document.getElementById('manualTime').value = '';
+  document.getElementById('manualAnytimeBtn').classList.add('active');
   document.getElementById('manualAddBox').style.display = 'none';
   showToast(name + ' added to ' + manualCity + ' ' + formatDate(manualDay));
   renderItineraryContent();
@@ -1316,6 +1357,11 @@ function toggleItinerary(){
     </div>
     <div style="font-size:12px;font-weight:600;color:#7a6e61;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Day</div>
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem" id="saveDayOpts"></div>
+    <div style="font-size:12px;font-weight:600;color:#7a6e61;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 6px">Time</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+      <button class="fopt active" id="anytimeBtn" onclick="setAnytime(event)">Anytime</button>
+      <input type="time" id="saveTime" style="padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:13px;border:0.5px solid #d9d0c3;border-radius:10px;color:#1a1008;background:#f0ebe1;outline:none" oninput="document.getElementById('anytimeBtn').classList.remove('active')"/>
+    </div>
     <div style="display:flex;gap:8px">
       <button onclick="confirmSave()" style="flex:1;padding:11px;background:#c0392b;color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer"><i class="ti ti-bookmark"></i> Save to Itinerary</button>
       <button onclick="closeSaveDialog()" style="padding:11px 16px;background:#f0ebe1;border:0.5px solid #d9d0c3;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">Cancel</button>
