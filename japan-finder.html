@@ -257,6 +257,10 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
 .itin-place-name{font-weight:500;font-size:13px;color:#1a1008;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .itin-place-addr{font-size:11px;color:#7a6e61;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .itin-place-time{font-size:11px;color:var(--crimson);font-weight:500;margin-top:1px}
+.time-scroll{width:72px;height:180px;overflow-y:scroll;border:0.5px solid #d9d0c3;border-radius:12px;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.time-scroll::-webkit-scrollbar{display:none}
+.time-scroll-item{height:44px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:300;color:#7a6e61;scroll-snap-align:center;cursor:pointer;font-family:'DM Sans',sans-serif;transition:color 0.15s}
+.time-scroll-item.selected{color:#c0392b;font-weight:500;font-size:22px}
 .itin-place-actions{display:flex;gap:6px;flex-shrink:0}
 .itin-dir-btn{display:flex;align-items:center;gap:3px;font-size:11px;color:#c0392b;text-decoration:none;background:#faf7f2;border:0.5px solid #d9d0c3;padding:4px 9px;border-radius:20px}
 .itin-del-btn{display:flex;align-items:center;font-size:13px;color:#7a6e61;background:#faf7f2;border:0.5px solid #d9d0c3;padding:4px 8px;border-radius:20px;cursor:pointer}
@@ -344,9 +348,10 @@ body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--ink);m
           <input type="time" id="manualTime" style="padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:13px;border:0.5px solid var(--border);border-radius:10px;color:var(--ink);background:var(--paper);outline:none" oninput="document.getElementById('manualAnytimeBtn').classList.remove('active')"/>
         </div>
         <div style="font-size:12px;font-weight:600;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin:10px 0 6px">Time</div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-          <button class="fopt active" id="manualAnytimeBtn" onclick="setManualAnytime(event)">Anytime</button>
-          <input type="time" id="manualTime" style="padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:13px;border:0.5px solid var(--border);border-radius:10px;color:var(--ink);background:var(--paper);outline:none" oninput="document.getElementById('manualAnytimeBtn').classList.remove('active')"/>
+        <div style="margin-bottom:12px">
+          <button onclick="openTimePicker('manual')" id="manualTimeDisplay" style="width:100%;padding:9px 14px;background:var(--paper);border:0.5px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px">
+            <i class="ti ti-clock" style="color:#c0392b"></i> <span id="manualTimeLabel">Anytime</span>
+          </button>
         </div>
         <button onclick="confirmManualAdd()" style="width:100%;padding:11px;background:var(--crimson);color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer"><i class="ti ti-plus"></i> Add to Itinerary</button>
         <button onclick="document.getElementById('manualAddBox').style.display='none'" style="width:100%;margin-top:8px;padding:10px;background:transparent;color:var(--muted);border:0.5px solid var(--border);border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">Cancel</button>
@@ -1059,15 +1064,125 @@ function showSaveDialog(place){
   document.querySelectorAll('.save-city-btn').forEach(b=>b.classList.toggle('active',b.dataset.city===saveCity));
   renderDayButtons();
   // Reset time
-  document.getElementById('saveTime').value='';
-  document.getElementById('anytimeBtn').classList.add('active');
+  document.getElementById('saveTimeLabel').textContent='Anytime';
+  document.getElementById('saveTimeDisplay').dataset.time='anytime';
   document.getElementById('saveOverlay').style.display='flex';
 }
 
+// ── Custom Time Picker ────────────────────────────────────────────────────────
+let timePickerContext = 'save'; // 'save' or 'manual'
+let selectedHour = 9;
+let selectedMin  = 0;
+let pickerIsAnytime = true;
+
+function openTimePicker(context){
+  timePickerContext = context;
+  const overlay = document.getElementById('timePickerOverlay');
+  overlay.style.display = 'flex';
+  buildScrollPickers();
+  updateSelectedDisplay();
+  // Mark anytime if currently anytime
+  const label = context==='save'
+    ? document.getElementById('saveTimeLabel').textContent
+    : document.getElementById('manualTimeLabel').textContent;
+  pickerIsAnytime = (label==='Anytime');
+  updateAnytimeBtn();
+}
+
+function buildScrollPickers(){
+  const hourScroll = document.getElementById('hourScroll');
+  const minScroll  = document.getElementById('minScroll');
+  hourScroll.innerHTML = '';
+  minScroll.innerHTML  = '';
+
+  // Hours 00-23
+  for(let h=0; h<24; h++){
+    const div = document.createElement('div');
+    div.className = 'time-scroll-item' + (h===selectedHour?' selected':'');
+    div.textContent = String(h).padStart(2,'0');
+    div.addEventListener('click',()=>{ selectedHour=h; updateScroll(hourScroll, h, 24); pickerIsAnytime=false; updateAnytimeBtn(); updateSelectedDisplay(); });
+    hourScroll.appendChild(div);
+  }
+  // Minutes 00, 05, 10 ... 55
+  const mins = [0,5,10,15,20,25,30,35,40,45,50,55];
+  const nearestMin = mins.reduce((a,b)=>Math.abs(b-selectedMin)<Math.abs(a-selectedMin)?b:a);
+  mins.forEach(m=>{
+    const div = document.createElement('div');
+    div.className = 'time-scroll-item' + (m===nearestMin?' selected':'');
+    div.textContent = String(m).padStart(2,'0');
+    div.addEventListener('click',()=>{ selectedMin=m; updateScroll(minScroll, mins.indexOf(m), mins.length); pickerIsAnytime=false; updateAnytimeBtn(); updateSelectedDisplay(); });
+    minScroll.appendChild(div);
+  });
+
+  // Scroll to selected
+  setTimeout(()=>{
+    hourScroll.scrollTop = selectedHour * 44 - 68;
+    minScroll.scrollTop  = mins.indexOf(nearestMin) * 44 - 68;
+  }, 50);
+
+  // Update on scroll
+  hourScroll.addEventListener('scroll', ()=>{
+    const idx = Math.round(hourScroll.scrollTop / 44);
+    if(idx!==selectedHour){ selectedHour=Math.max(0,Math.min(23,idx)); updateScrollHighlight(hourScroll, selectedHour); pickerIsAnytime=false; updateAnytimeBtn(); updateSelectedDisplay(); }
+  });
+  minScroll.addEventListener('scroll', ()=>{
+    const idx = Math.round(minScroll.scrollTop / 44);
+    if(idx >= 0 && idx < mins.length && mins[idx]!==selectedMin){ selectedMin=mins[idx]; updateScrollHighlight(minScroll, idx); pickerIsAnytime=false; updateAnytimeBtn(); updateSelectedDisplay(); }
+  });
+}
+
+function updateScroll(el, idx, total){
+  el.scrollTop = idx * 44 - 68;
+  updateScrollHighlight(el, idx);
+}
+
+function updateScrollHighlight(el, activeIdx){
+  el.querySelectorAll('.time-scroll-item').forEach((item,i)=>{
+    item.classList.toggle('selected', i===activeIdx);
+  });
+}
+
+function updateSelectedDisplay(){
+  const t = String(selectedHour).padStart(2,'0')+':'+String(selectedMin).padStart(2,'0');
+  document.getElementById('selectedTimeDisplay').textContent = t;
+}
+
+function updateAnytimeBtn(){
+  const btn = document.getElementById('pickerAnytimeBtn');
+  if(pickerIsAnytime){
+    btn.style.background='#c0392b'; btn.style.color='#fff'; btn.style.borderColor='#c0392b';
+  } else {
+    btn.style.background='#f0ebe1'; btn.style.color='#7a6e61'; btn.style.borderColor='#d9d0c3';
+  }
+}
+
+function selectAnytime(){
+  pickerIsAnytime = true;
+  updateAnytimeBtn();
+  document.getElementById('selectedTimeDisplay').textContent = 'Anytime';
+}
+
+function closeTimePicker(){
+  document.getElementById('timePickerOverlay').style.display = 'none';
+}
+
+function confirmTimePicker(){
+  const timeStr = pickerIsAnytime ? 'anytime'
+    : String(selectedHour).padStart(2,'0')+':'+String(selectedMin).padStart(2,'0');
+  const label = pickerIsAnytime ? 'Anytime' : timeStr;
+
+  if(timePickerContext==='save'){
+    document.getElementById('saveTimeLabel').textContent = label;
+    document.getElementById('saveTimeDisplay').dataset.time = timeStr;
+  } else {
+    document.getElementById('manualTimeLabel').textContent = label;
+    document.getElementById('manualTimeDisplay').dataset.time = timeStr;
+  }
+  closeTimePicker();
+}
+
 function setAnytime(e){
-  e.preventDefault();
-  document.getElementById('saveTime').value='';
-  document.getElementById('anytimeBtn').classList.add('active');
+  if(e) e.preventDefault();
 }
 
 function renderDayButtons(){
@@ -1105,7 +1220,7 @@ function confirmSave(){
   if(!data[saveCity])data[saveCity]={};
   if(!data[saveCity][saveDay])data[saveCity][saveDay]=[];
   const exists=data[saveCity][saveDay].some(p=>p.place_id===saveTarget.place_id);
-  const timeVal = document.getElementById('saveTime').value;
+  const timeVal = document.getElementById('saveTimeDisplay').dataset.time||'anytime';
   const placeWithTime = Object.assign({}, saveTarget, {time: timeVal||'anytime'});
   if(!exists)data[saveCity][saveDay].push(placeWithTime);
   setItinerary(data);
@@ -1252,15 +1367,11 @@ function showManualAdd(){
   });
   renderManualDayButtons();
   // Reset time
-  document.getElementById('manualTime').value='';
-  document.getElementById('manualAnytimeBtn').classList.add('active');
+  document.getElementById('manualTimeLabel').textContent='Anytime';
+  document.getElementById('manualTimeDisplay').dataset.time='anytime';
 }
 
-function setManualAnytime(e){
-  e.preventDefault();
-  document.getElementById('manualTime').value='';
-  document.getElementById('manualAnytimeBtn').classList.add('active');
-}
+
 
 function renderManualDayButtons(){
   const container = document.getElementById('manualDayOpts');
@@ -1293,7 +1404,7 @@ function confirmManualAdd(){
   const name = document.getElementById('manualName').value.trim();
   if(!name){ document.getElementById('manualName').focus(); return; }
   const addr = document.getElementById('manualAddr').value.trim();
-  const timeVal = document.getElementById('manualTime').value;
+  const timeVal = document.getElementById('manualTimeDisplay').dataset.time||'anytime';
   const place = {
     place_id: 'manual_'+Date.now(),
     name,
@@ -1358,14 +1469,51 @@ function toggleItinerary(){
     <div style="font-size:12px;font-weight:600;color:#7a6e61;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Day</div>
     <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem" id="saveDayOpts"></div>
     <div style="font-size:12px;font-weight:600;color:#7a6e61;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 6px">Time</div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
-      <button class="fopt active" id="anytimeBtn" onclick="setAnytime(event)">Anytime</button>
-      <input type="time" id="saveTime" style="padding:6px 10px;font-family:'DM Sans',sans-serif;font-size:13px;border:0.5px solid #d9d0c3;border-radius:10px;color:#1a1008;background:#f0ebe1;outline:none" oninput="document.getElementById('anytimeBtn').classList.remove('active')"/>
+    <div style="margin-bottom:16px">
+      <button onclick="openTimePicker('save')" id="saveTimeDisplay" style="width:100%;padding:9px 14px;background:#f0ebe1;border:0.5px solid #d9d0c3;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;color:#7a6e61;cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px">
+        <i class="ti ti-clock" style="color:#c0392b"></i> <span id="saveTimeLabel">Anytime</span>
+      </button>
     </div>
     <div style="display:flex;gap:8px">
       <button onclick="confirmSave()" style="flex:1;padding:11px;background:#c0392b;color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer"><i class="ti ti-bookmark"></i> Save to Itinerary</button>
       <button onclick="closeSaveDialog()" style="padding:11px 16px;background:#f0ebe1;border:0.5px solid #d9d0c3;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer">Cancel</button>
     </div>
+  </div>
+</div>
+<!-- Custom Time Picker -->
+<div id="timePickerOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:flex-end;justify-content:center">
+  <div style="background:#fff;border-radius:20px 20px 0 0;padding:1.25rem;width:100%;max-width:420px;animation:slideUp 0.25s ease">
+    <div style="font-family:'Noto Serif JP',serif;font-size:17px;font-weight:400;text-align:center;margin-bottom:1rem;color:#1a1008">Select Time</div>
+
+    <!-- Anytime option -->
+    <button id="pickerAnytimeBtn" onclick="selectAnytime()" style="width:100%;padding:11px;background:#f0ebe1;border:0.5px solid #d9d0c3;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#7a6e61;cursor:pointer;margin-bottom:1rem;transition:all 0.15s">
+      Anytime
+    </button>
+
+    <!-- Scroll pickers -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:1.25rem">
+      <!-- Hour -->
+      <div style="text-align:center">
+        <div style="font-size:11px;color:#7a6e61;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Hour</div>
+        <div class="time-scroll" id="hourScroll"></div>
+      </div>
+      <div style="font-size:28px;font-weight:300;color:#1a1008;padding-top:20px">:</div>
+      <!-- Minute -->
+      <div style="text-align:center">
+        <div style="font-size:11px;color:#7a6e61;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Min</div>
+        <div class="time-scroll" id="minScroll"></div>
+      </div>
+    </div>
+
+    <!-- Selected time display -->
+    <div id="selectedTimeDisplay" style="text-align:center;font-size:28px;font-weight:300;color:#c0392b;font-family:'Noto Serif JP',serif;margin-bottom:1.25rem">09:00</div>
+
+    <button onclick="confirmTimePicker()" style="width:100%;padding:13px;background:#c0392b;color:#fff;border:none;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer">
+      Select
+    </button>
+    <button onclick="closeTimePicker()" style="width:100%;margin-top:8px;padding:11px;background:transparent;border:0.5px solid #d9d0c3;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:13px;color:#7a6e61;cursor:pointer">
+      Cancel
+    </button>
   </div>
 </div>
 </body>
